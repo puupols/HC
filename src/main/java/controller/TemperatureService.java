@@ -7,12 +7,28 @@ import pojo.Temperature;
 
 public class TemperatureService {
 	
+	private static final double defaultDesiredTemperature = 21;
+	private static final double defaultTemperatureTrashold = 0.5;
+	private static final double defaultCurrentTemperature = 21;
+	
 	private static Temperature currentTemperature;	
 	private static Temperature desiredTemperature;
 	private static Temperature temperatureThershold;		
 	
 	public static TemperatureService instance;
 	
+	public TemperatureService() {
+		Date date = new Date();
+		desiredTemperature = new Temperature();
+		desiredTemperature.setValue(defaultDesiredTemperature);
+		desiredTemperature.setLogDate(date);
+		temperatureThershold = new Temperature();
+		temperatureThershold.setValue(defaultTemperatureTrashold);
+		temperatureThershold.setLogDate(date);
+		currentTemperature = new Temperature();
+		currentTemperature.setValue(defaultCurrentTemperature);
+		currentTemperature.setLogDate(date);
+	}
 		
 	public static TemperatureService get() {		
 			if(instance == null) {
