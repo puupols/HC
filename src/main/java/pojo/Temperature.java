@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Temperature {
 	private double value;
-	private Date readDate;
+	private Date logDate;
 	
 	
 	public double getValue() {
@@ -15,11 +15,11 @@ public class Temperature {
 		this.value = value;
 	}
 	
-	public Date getReadDate() {
-		return this.readDate;
+	public Date getLogDate() {
+		return this.logDate;
 	} 
 	
-	public void setReadDate(Date readDate) {
-		this.readDate = readDate;
+	public void setLogDate(Date logDate) {
+		this.logDate = logDate;
 	}
 }

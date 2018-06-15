@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
 public class TemperatureController {
 	
@@ -19,15 +17,14 @@ public class TemperatureController {
 	@RequestMapping("/getCurrentData")
 	public TemperatureService GetCurrentData() {
 		return temperatureService;
-	}
-	
+	}	
 	
 	@RequestMapping("/storeTemperature")
 	public Temperature StoreTemperature(@RequestParam(value="temperature") double value) {
 		Temperature temperature = new Temperature();
-		Date readDate = new Date();		
+		Date logDate = new Date();		
 		temperature.setValue(value);
-		temperature.setReadDate(readDate);
+		temperature.setLogDate(logDate);
 		return temperatureService.storeTemperature(temperature);
 	}
 	
@@ -37,17 +34,30 @@ public class TemperatureController {
 	}
 	
 	@RequestMapping("/getDesiredTemperature")
-	public double GetDesiredTemperature() {
+	public Temperature GetDesiredTemperature() {
 		return temperatureService.getDesiredTemperature();
 	}
 	
 	@RequestMapping("/setDesiredTemperature")
-	public double SetDesiredTemperature(@RequestParam(value="temperature") double temperature) {
+	public Temperature SetDesiredTemperature(@RequestParam(value="temperature") double value) {
+		Temperature temperature = new Temperature();
+		Date date = new Date();
+		temperature.setLogDate(date);
+		temperature.setValue(value);		
 		return temperatureService.setDesiredTemperature(temperature);
 	}
 	
 	@RequestMapping("/getHeaterStatus")
 	public HeaterSwitch getHeaterStatus() {
 		return temperatureService.getHeaterStatus();
+	}
+	
+	@RequestMapping("/setTemperatureThreshold")
+	public Temperature SetTemperatureThreshold(@RequestParam(value="temperature") double value) {
+		Temperature temperature = new Temperature();
+		Date date = new Date();
+		temperature.setLogDate(date);
+		temperature.setValue(value);		
+		return temperatureService.setTemperatureThershold(temperature);
 	}
 }

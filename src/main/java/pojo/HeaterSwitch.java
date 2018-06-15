@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class HeaterSwitch {
 	private String status;
-	private Date calcDate;
+	private Date logDate;
 	
 	
 	public String getStatus() {
@@ -14,12 +14,9 @@ public class HeaterSwitch {
 		this.status = status;
 	}
 	public Date getCalcDate() {
-		return this.calcDate;
+		return this.logDate;
 	}
-	public void setCalcDate(Date calcDate) {
-		this.calcDate = calcDate;
+	public void setLogDate(Date logDate) {
+		this.logDate = logDate;
 	}
-	
-	
-
 }

@@ -7,36 +7,35 @@ import pojo.Temperature;
 
 public class TemperatureService {
 	
-	private static double currentTemperature = 21;	
-	private static double desiredTemperature = 21;
-	private static double temperatureThershold = 0.5;	
-	private static Date lastTemperatureReading;
+	private static Temperature currentTemperature;	
+	private static Temperature desiredTemperature;
+	private static Temperature temperatureThershold;		
 	
 	public static TemperatureService instance;
 	
+		
 	public static TemperatureService get() {		
 			if(instance == null) {
-				instance = new TemperatureService(); 
+				instance = new TemperatureService();
 			}		
 		return instance;
 	}
 	
 	public Temperature storeTemperature(Temperature temperature) {		
-		currentTemperature = temperature.getValue();
-		lastTemperatureReading = temperature.getReadDate();
+		currentTemperature.setValue(temperature.getValue());
+		currentTemperature.setLogDate(temperature.getLogDate());		
 		return temperature;
 	}
 	
 	public HeaterSwitch getHeaterStatus() {
 		
 		HeaterSwitch heaterSwitch = new HeaterSwitch();
-		Date calcDate = new Date();		
-		heaterSwitch.setCalcDate(calcDate);
-		
-		if(desiredTemperature - currentTemperature > temperatureThershold) {
+		Date logDate = new Date();		
+		heaterSwitch.setLogDate(logDate);		
+		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThershold.getValue()) {
 			heaterSwitch.setStatus("ON");
 			return heaterSwitch;
-		} else if(heaterSwitch.getStatus() == "ON" && currentTemperature - desiredTemperature < temperatureThershold){
+		} else if(heaterSwitch.getStatus() == "ON" && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThershold.getValue()){
 			heaterSwitch.setStatus("ON");
 			return heaterSwitch;
 		} else {
@@ -45,23 +44,27 @@ public class TemperatureService {
 		}
 	}
 	
-	public Temperature getCurrentTemperature() {
-		Temperature temperature = new Temperature();
-		temperature.setValue(currentTemperature);
-		temperature.setReadDate(lastTemperatureReading);
-		return temperature;
+	public Temperature getCurrentTemperature() {		
+		return currentTemperature;
 	}
 	
-	public double getDesiredTemperature() {
+	public Temperature getDesiredTemperature() {
 		return desiredTemperature;
-	}
-	
-	public Date getLastTemperatureReading() {
-		return lastTemperatureReading;
-	}
+	}	
 		
-	public double setDesiredTemperature(double temperature) {
-		desiredTemperature = temperature;
+	public Temperature setDesiredTemperature(Temperature temperature) {
+		desiredTemperature.setValue(temperature.getValue());
+		desiredTemperature.setLogDate(temperature.getLogDate());
 		return desiredTemperature;
-	}		
+	}
+	
+	public Temperature getTemperatureThershold() {
+		return temperatureThershold;
+	}
+
+	public Temperature setTemperatureThershold(Temperature temperature) {
+		temperatureThershold.setValue(temperature.getValue());
+		temperatureThershold.setLogDate(temperature.getLogDate());
+		return temperatureThershold;
+	}	
 }
