@@ -1,37 +1,31 @@
 package rest;
 import controller.TemperatureService;
 import pojo.HeaterSwitch;
+import pojo.Temperature;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class TemperatureController {
-	
-	@Autowired
-	private temperatureRepository temperatureRepository;
 	
 	TemperatureService temperatureService = TemperatureService.get();
 	
-    @RequestMapping("/getCurrentData")
-    public TemperatureService GetCurrentData() {
-        return temperatureService;
-    }    
-
+	@RequestMapping("/getCurrentData")
+	public TemperatureService GetCurrentData() {
+		return temperatureService;
+	}	
+	
 	@RequestMapping("/storeTemperature")
-	public @ResponseBody Temperature StoreTemperature(@RequestParam(value="temperature") double value) {
+	public Temperature StoreTemperature(@RequestParam(value="temperature") double value) {
 		Temperature temperature = new Temperature();
 		Date logDate = new Date();		
 		temperature.setValue(value);
 		temperature.setLogDate(logDate);
-		temperatureRepository.save(temperature);	
 		return temperatureService.storeTemperature(temperature);
-			
 	}
 	
 	@RequestMapping("/getCurrentTemperature")

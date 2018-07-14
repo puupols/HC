@@ -3,7 +3,7 @@ package controller;
 import java.util.Date;
 
 import pojo.HeaterSwitch;
-import rest.Temperature;
+import pojo.Temperature;
 
 public class TemperatureService {
 	
