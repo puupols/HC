@@ -10,9 +10,7 @@ public class TemperatureService {
 	
 	private static final double defaultDesiredTemperature = 21;
 	private static final double defaultTemperatureTrashold = 0.5;
-	private static final double defaultCurrentTemperature = 21;
 	
-	private static Temperature currentTemperature;	
 	private static Temperature desiredTemperature;
 	private static Temperature temperatureThershold;		
 	
@@ -27,10 +25,7 @@ public class TemperatureService {
 		desiredTemperature.setLogDate(date);
 		temperatureThershold = new Temperature();
 		temperatureThershold.setValue(defaultTemperatureTrashold);
-		temperatureThershold.setLogDate(date);
-		currentTemperature = new Temperature();
-		currentTemperature.setValue(defaultCurrentTemperature);
-		currentTemperature.setLogDate(date);
+		temperatureThershold.setLogDate(date);		
 	}
 		
 	public static TemperatureService get() {		
@@ -41,8 +36,6 @@ public class TemperatureService {
 	}
 	
 	public Temperature storeTemperature(Temperature temperature) {		
-		currentTemperature.setValue(temperature.getValue());
-		currentTemperature.setLogDate(temperature.getLogDate());
 		db.saveTemperature(temperature);
 		return temperature;
 	}
@@ -51,7 +44,8 @@ public class TemperatureService {
 		
 		HeaterSwitch heaterSwitch = new HeaterSwitch();
 		Date logDate = new Date();		
-		heaterSwitch.setLogDate(logDate);		
+		heaterSwitch.setLogDate(logDate);
+		Temperature currentTemperature = db.getLastTemperature();
 		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThershold.getValue()) {
 			heaterSwitch.setStatus("ON");
 			return heaterSwitch;
@@ -65,7 +59,7 @@ public class TemperatureService {
 	}
 	
 	public Temperature getCurrentTemperature() {		
-		return currentTemperature;
+		return db.getLastTemperature();
 	}
 	
 	public Temperature getDesiredTemperature() {

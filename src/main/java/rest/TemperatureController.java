@@ -29,7 +29,7 @@ public class TemperatureController {
 	}
 	
 	@RequestMapping("/getCurrentTemperature")
-	public Temperature GetCurrentTemperature() {
+	public Temperature GetCurrentTemperature() {		
 		return temperatureService.getCurrentTemperature();
 	}
 	

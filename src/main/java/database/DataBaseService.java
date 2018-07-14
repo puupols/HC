@@ -2,14 +2,17 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import pojo.Temperature;
 
 public class DataBaseService {
-	private static Connection getConnection() {
-		
-		Connection conn = null;		
+	
+	private Connection conn = getConnection();
+	
+	private Connection getConnection() {
+						
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/exercises","root","Ciupicipicss390");
@@ -20,8 +23,7 @@ public class DataBaseService {
 		return conn;
 	}
 	
-	public void saveTemperature(Temperature temperature) {
-		Connection conn = getConnection();
+	public void saveTemperature(Temperature temperature) {		
 		String sql = "INSERT INTO temperature (log_date, value) VALUES (?,?)";
 		java.sql.Timestamp tDate = new java.sql.Timestamp(temperature.getLogDate().getTime());
 		try {
@@ -33,5 +35,22 @@ public class DataBaseService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	public Temperature getLastTemperature() {
+		
+		Temperature temperature = new Temperature();
+		String sql = "SELECT * FROM temperature order by log_date desc limit 1;";
+			try {
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet result = ps.executeQuery();
+				while (result.next()) {					
+					temperature.setValue(result.getDouble("value"));
+					temperature.setLogDate(result.getTimestamp("log_date"));
+				}
+			} catch (SQLException e){
+				e.printStackTrace();
+			}
+		return temperature;
 	}
 }
