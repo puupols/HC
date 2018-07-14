@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TemperatureController {
 	
 	TemperatureService temperatureService = TemperatureService.get();
-	
+		
 	@RequestMapping("/getCurrentData")
 	public TemperatureService GetCurrentData() {
 		return temperatureService;
@@ -24,7 +24,7 @@ public class TemperatureController {
 		Temperature temperature = new Temperature();
 		Date logDate = new Date();		
 		temperature.setValue(value);
-		temperature.setLogDate(logDate);
+		temperature.setLogDate(logDate);		
 		return temperatureService.storeTemperature(temperature);
 	}
 	

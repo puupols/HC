@@ -2,6 +2,7 @@ package controller;
 
 import java.util.Date;
 
+import database.DataBaseService;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
 
@@ -16,6 +17,8 @@ public class TemperatureService {
 	private static Temperature temperatureThershold;		
 	
 	public static TemperatureService instance;
+	
+	DataBaseService db = new DataBaseService();
 	
 	public TemperatureService() {
 		Date date = new Date();
@@ -39,7 +42,8 @@ public class TemperatureService {
 	
 	public Temperature storeTemperature(Temperature temperature) {		
 		currentTemperature.setValue(temperature.getValue());
-		currentTemperature.setLogDate(temperature.getLogDate());		
+		currentTemperature.setLogDate(temperature.getLogDate());
+		db.saveTemperature(temperature);
 		return temperature;
 	}
 	
