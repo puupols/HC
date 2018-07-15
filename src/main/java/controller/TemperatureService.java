@@ -1,31 +1,31 @@
 package controller;
 
 import java.util.Date;
+import java.util.Properties;
 
 import database.DataBaseService;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
 
 public class TemperatureService {
-	
-	private static final double defaultDesiredTemperature = 21;
-	private static final double defaultTemperatureTrashold = 0.5;
-	
+
+	public DataBaseService db;
 	private static Temperature desiredTemperature;
 	private static Temperature temperatureThershold;		
 	
 	public static TemperatureService instance;
-	
-	DataBaseService db = new DataBaseService();
-	
+		
 	public TemperatureService() {
-		Date date = new Date();
+		ConfigurationService configurationService = new ConfigurationService();
+		Properties properties = configurationService.getProperties();
+		String defaultDesiredTemperature = properties.getProperty("DESIRED_TEMPERATURE");
+		String defaultTemperatureTrashold = properties.getProperty("TEMPERATURE_TRASHOLD");		
+		
+		db = new DataBaseService();		
 		desiredTemperature = new Temperature();
-		desiredTemperature.setValue(defaultDesiredTemperature);
-		desiredTemperature.setLogDate(date);
+		desiredTemperature.setValue(Double.parseDouble(defaultDesiredTemperature));		
 		temperatureThershold = new Temperature();
-		temperatureThershold.setValue(defaultTemperatureTrashold);
-		temperatureThershold.setLogDate(date);		
+		temperatureThershold.setValue(Double.parseDouble(defaultTemperatureTrashold));				
 	}
 		
 	public static TemperatureService get() {		

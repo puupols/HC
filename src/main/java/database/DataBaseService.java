@@ -4,19 +4,25 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
+import controller.ConfigurationService;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
 
 public class DataBaseService {
 	
-	private Connection conn = getConnection();
+	private ConfigurationService configurationService = new ConfigurationService();
+	private Properties properties = configurationService.getProperties();
+	private String dbUrl = properties.getProperty("DB_CONNECTION_URL");
+	private String userName = properties.getProperty("DB_USER");
+	private String password  = properties.getProperty("DB_PASSWORD");
+	private Connection conn = getConnection(dbUrl, userName, password);
 	
-	private Connection getConnection() {
-						
+	private Connection getConnection(String dbUrl, String userName, String password) {						
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/exercises","root","Ciupicipicss390");
+			conn = DriverManager.getConnection(dbUrl,userName,password);
 			System.out.println("Connected...");			
 		}catch(Exception e) {
 			System.out.print(e);

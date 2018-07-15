@@ -14,11 +14,6 @@ public class TemperatureController {
 	
 	TemperatureService temperatureService = TemperatureService.get();
 		
-	@RequestMapping("/getCurrentData")
-	public TemperatureService GetCurrentData() {
-		return temperatureService;
-	}	
-	
 	@RequestMapping("/storeTemperature")
 	public Temperature StoreTemperature(@RequestParam(value="temperature") double value) {
 		Temperature temperature = new Temperature();
