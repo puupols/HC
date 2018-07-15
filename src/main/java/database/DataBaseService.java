@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import pojo.HeaterSwitch;
 import pojo.Temperature;
 
 public class DataBaseService {
@@ -37,8 +38,7 @@ public class DataBaseService {
 		}	
 	}
 	
-	public Temperature getLastTemperature() {
-		
+	public Temperature getLastTemperature() {		
 		Temperature temperature = new Temperature();
 		String sql = "SELECT * FROM temperature order by log_date desc limit 1;";
 			try {
@@ -52,5 +52,19 @@ public class DataBaseService {
 				e.printStackTrace();
 			}
 		return temperature;
+	}
+	
+	public void saveSwitchStatus(HeaterSwitch heaterSwitch) {
+		String sql = "INSERT INTO switch (log_date, value) VALUES (?, ?)";
+		java.sql.Timestamp tDate = new java.sql.Timestamp(heaterSwitch.getLogDate().getTime());
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setTimestamp(1, tDate);
+			ps.setString(2, heaterSwitch.getStatus());
+			ps.execute();
+			System.out.println("Switch status saved");
+		} catch (SQLException e){
+			e.printStackTrace();
+		}		
 	}
 }

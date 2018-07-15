@@ -40,22 +40,20 @@ public class TemperatureService {
 		return temperature;
 	}
 	
-	public HeaterSwitch getHeaterStatus() {
-		
+	public HeaterSwitch getHeaterStatus() {		
 		HeaterSwitch heaterSwitch = new HeaterSwitch();
 		Date logDate = new Date();		
 		heaterSwitch.setLogDate(logDate);
 		Temperature currentTemperature = db.getLastTemperature();
 		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThershold.getValue()) {
-			heaterSwitch.setStatus("ON");
-			return heaterSwitch;
+			heaterSwitch.setStatus("ON");			
 		} else if(heaterSwitch.getStatus() == "ON" && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThershold.getValue()){
-			heaterSwitch.setStatus("ON");
-			return heaterSwitch;
+			heaterSwitch.setStatus("ON");			
 		} else {
-			heaterSwitch.setStatus("OFF");
-			return heaterSwitch;
+			heaterSwitch.setStatus("OFF");			
 		}
+		db.saveSwitchStatus(heaterSwitch);
+		return heaterSwitch;
 	}
 	
 	public Temperature getCurrentTemperature() {		

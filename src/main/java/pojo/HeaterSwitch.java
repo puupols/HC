@@ -13,7 +13,7 @@ public class HeaterSwitch {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Date getCalcDate() {
+	public Date getLogDate() {
 		return this.logDate;
 	}
 	public void setLogDate(Date logDate) {
