@@ -1,8 +1,6 @@
 package controller;
 
 import java.util.Date;
-import java.util.Properties;
-
 import database.DataBaseService;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
@@ -16,16 +14,15 @@ public class TemperatureService {
 	public static TemperatureService instance;
 		
 	public TemperatureService() {
-		ConfigurationService configurationService = new ConfigurationService();
-		Properties properties = configurationService.getProperties();
-		String defaultDesiredTemperature = properties.getProperty("DESIRED_TEMPERATURE");
-		String defaultTemperatureTrashold = properties.getProperty("TEMPERATURE_TRASHOLD");		
+		ConfigurationService configurationService = ConfigurationService.getConfigurationService();		
+		Double defaultDesiredTemperature = configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE");
+		Double defaultTemperatureTrashold = configurationService.getPropertyAsDouble("TEMPERATURE_TRASHOLD");		
 		
 		db = new DataBaseService();		
 		desiredTemperature = new Temperature();
-		desiredTemperature.setValue(Double.parseDouble(defaultDesiredTemperature));		
+		desiredTemperature.setValue(defaultDesiredTemperature);		
 		temperatureThershold = new Temperature();
-		temperatureThershold.setValue(Double.parseDouble(defaultTemperatureTrashold));				
+		temperatureThershold.setValue(defaultTemperatureTrashold);				
 	}
 		
 	public static TemperatureService get() {		

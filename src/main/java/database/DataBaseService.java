@@ -4,7 +4,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import controller.ConfigurationService;
 import pojo.HeaterSwitch;
@@ -12,11 +11,10 @@ import pojo.Temperature;
 
 public class DataBaseService {
 	
-	private ConfigurationService configurationService = new ConfigurationService();
-	private Properties properties = configurationService.getProperties();
-	private String dbUrl = properties.getProperty("DB_CONNECTION_URL");
-	private String userName = properties.getProperty("DB_USER");
-	private String password  = properties.getProperty("DB_PASSWORD");
+	private ConfigurationService configurationService = ConfigurationService.getConfigurationService();	
+	private String dbUrl = configurationService.getProperty("DB_CONNECTION_URL");
+	private String userName = configurationService.getProperty("DB_USER");
+	private String password  = configurationService.getProperty("DB_PASSWORD");
 	private Connection conn = getConnection(dbUrl, userName, password);
 	
 	private Connection getConnection(String dbUrl, String userName, String password) {						
