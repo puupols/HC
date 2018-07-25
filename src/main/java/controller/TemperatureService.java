@@ -37,7 +37,7 @@ public class TemperatureService {
 		return temperature;
 	}
 	
-	public HeaterSwitch getHeaterStatus() {		
+	public HeaterSwitch calculateHeaterStatus() {		
 		HeaterSwitch heaterSwitch = new HeaterSwitch();
 		Date logDate = new Date();		
 		heaterSwitch.setLogDate(logDate);
@@ -48,7 +48,11 @@ public class TemperatureService {
 			heaterSwitch.setStatus("ON");			
 		} else {
 			heaterSwitch.setStatus("OFF");			
-		}
+		}		
+		return heaterSwitch;
+	}
+	
+	public HeaterSwitch storeHeaterStatus(HeaterSwitch heaterSwitch) {
 		db.saveSwitchStatus(heaterSwitch);
 		return heaterSwitch;
 	}

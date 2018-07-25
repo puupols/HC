@@ -23,6 +23,15 @@ public class TemperatureController {
 		return temperatureService.storeTemperature(temperature);
 	}
 	
+	@RequestMapping("/storeHeaterStatus")
+	public HeaterSwitch storeHeaterStatus(@RequestParam(value="heaterStatus") String value) {
+		HeaterSwitch heaterSwitch = new HeaterSwitch();
+		Date logDate = new Date();
+		heaterSwitch.setStatus(value);
+		heaterSwitch.setLogDate(logDate);		
+		return temperatureService.storeHeaterStatus(heaterSwitch);
+	}
+	
 	@RequestMapping("/getCurrentTemperature")
 	public Temperature GetCurrentTemperature() {		
 		return temperatureService.getCurrentTemperature();
@@ -42,9 +51,9 @@ public class TemperatureController {
 		return temperatureService.setDesiredTemperature(temperature);
 	}
 	
-	@RequestMapping("/getHeaterStatus")
+	@RequestMapping("/calculateHeaterStatus")
 	public HeaterSwitch getHeaterStatus() {
-		return temperatureService.getHeaterStatus();
+		return temperatureService.calculateHeaterStatus();
 	}
 	
 	@RequestMapping("/setTemperatureThreshold")
