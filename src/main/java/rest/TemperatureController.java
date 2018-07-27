@@ -1,5 +1,6 @@
 package rest;
 import controller.TemperatureService;
+import pojo.switchStatus;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
 
@@ -27,7 +28,12 @@ public class TemperatureController {
 	public HeaterSwitch storeHeaterStatus(@RequestParam(value="heaterStatus") String value) {
 		HeaterSwitch heaterSwitch = new HeaterSwitch();
 		Date logDate = new Date();
-		heaterSwitch.setStatus(value);
+		try {
+		heaterSwitch.setStatus(switchStatus.valueOf(value));
+		} catch (IllegalArgumentException e){
+			System.out.println("Switch status " + value + " not found in enum");
+			return null;
+		}
 		heaterSwitch.setLogDate(logDate);		
 		return temperatureService.storeHeaterStatus(heaterSwitch);
 	}

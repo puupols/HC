@@ -2,15 +2,17 @@ package pojo;
 
 import java.util.Date;
 
+import pojo.switchStatus;
+
 public class HeaterSwitch {
-	private String status;
+	private switchStatus status;
 	private Date logDate;
 	
 	
-	public String getStatus() {
+	public switchStatus getStatus() {
 		return this.status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(switchStatus status) {
 		this.status = status;
 	}
 	public Date getLogDate() {

@@ -4,6 +4,9 @@ import java.util.Date;
 import database.DataBaseService;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
+import pojo.switchStatus;
+
+
 
 public class TemperatureService {
 
@@ -43,11 +46,11 @@ public class TemperatureService {
 		heaterSwitch.setLogDate(logDate);
 		Temperature currentTemperature = db.getLastTemperature();
 		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThershold.getValue()) {
-			heaterSwitch.setStatus("ON");			
-		} else if(heaterSwitch.getStatus() == "ON" && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThershold.getValue()){
-			heaterSwitch.setStatus("ON");			
+			heaterSwitch.setStatus(switchStatus.ON);			
+		} else if(heaterSwitch.getStatus() == switchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThershold.getValue()){
+			heaterSwitch.setStatus(switchStatus.ON);			
 		} else {
-			heaterSwitch.setStatus("OFF");			
+			heaterSwitch.setStatus(switchStatus.OFF);			
 		}		
 		return heaterSwitch;
 	}

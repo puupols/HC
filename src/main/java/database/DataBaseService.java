@@ -64,7 +64,7 @@ public class DataBaseService {
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setTimestamp(1, tDate);
-			ps.setString(2, heaterSwitch.getStatus());
+			ps.setString(2, heaterSwitch.getStatus().toString());
 			ps.execute();
 			System.out.println("Switch status saved");
 		} catch (SQLException e){
