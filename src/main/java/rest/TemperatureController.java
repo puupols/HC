@@ -16,7 +16,7 @@ public class TemperatureController {
 	TemperatureService temperatureService = TemperatureService.get();
 		
 	@RequestMapping("/storeTemperature")
-	public Temperature StoreTemperature(@RequestParam(value="temperature") double value) {
+	public Temperature storeTemperature(@RequestParam(value="temperature") double value) {
 		Temperature temperature = new Temperature();
 		Date logDate = new Date();		
 		temperature.setValue(value);
@@ -38,36 +38,18 @@ public class TemperatureController {
 		return temperatureService.storeHeaterStatus(heaterSwitch);
 	}
 	
-	@RequestMapping("/getCurrentTemperature")
-	public Temperature GetCurrentTemperature() {		
-		return temperatureService.getCurrentTemperature();
+	@RequestMapping("/getLastTemperature")
+	public Temperature getLastTemperature() {		
+		return temperatureService.getLastTemperature();
 	}
 	
 	@RequestMapping("/getDesiredTemperature")
-	public Temperature GetDesiredTemperature() {
+	public Temperature getDesiredTemperature() {
 		return temperatureService.getDesiredTemperature();
-	}
+	}	
 	
-	@RequestMapping("/setDesiredTemperature")
-	public Temperature SetDesiredTemperature(@RequestParam(value="temperature") double value) {
-		Temperature temperature = new Temperature();
-		Date date = new Date();
-		temperature.setLogDate(date);
-		temperature.setValue(value);		
-		return temperatureService.setDesiredTemperature(temperature);
-	}
-	
-	@RequestMapping("/calculateHeaterStatus")
-	public HeaterSwitch getHeaterStatus() {
-		return temperatureService.calculateHeaterStatus();
-	}
-	
-	@RequestMapping("/setTemperatureThreshold")
-	public Temperature SetTemperatureThreshold(@RequestParam(value="temperature") double value) {
-		Temperature temperature = new Temperature();
-		Date date = new Date();
-		temperature.setLogDate(date);
-		temperature.setValue(value);		
-		return temperatureService.setTemperatureThershold(temperature);
+	@RequestMapping("/getCalculatedHeaterStatus")
+	public HeaterSwitch getCalculatedHeaterStatus() {
+		return temperatureService.getCalculatedHeaterStatus();
 	}
 }

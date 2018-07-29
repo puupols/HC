@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import controller.ConfigurationService;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
+import pojo.switchStatus;
 
 public class DataBaseService {
 	
@@ -70,5 +71,21 @@ public class DataBaseService {
 		} catch (SQLException e){
 			e.printStackTrace();
 		}		
+	}
+	
+	public HeaterSwitch getLastSwitchStatus() {
+		HeaterSwitch lastHeaterSwitch = new HeaterSwitch();
+		String sql = "SELECT * FROM switch order by log_date desc limit 1;";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet result = ps.executeQuery();
+			while(result.next()) {
+				lastHeaterSwitch.setLogDate(result.getTimestamp("log_date"));
+				lastHeaterSwitch.setStatus(switchStatus.valueOf(result.getString("value")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lastHeaterSwitch;
 	}
 }

@@ -10,22 +10,14 @@ import pojo.switchStatus;
 
 public class TemperatureService {
 
-	public DataBaseService db;
-	private static Temperature desiredTemperature;
-	private static Temperature temperatureThershold;		
-	
+	public ConfigurationService configurationService;
+	public DataBaseService db;	
 	public static TemperatureService instance;
 		
 	public TemperatureService() {
-		ConfigurationService configurationService = ConfigurationService.getConfigurationService();		
-		Double defaultDesiredTemperature = configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE");
-		Double defaultTemperatureTrashold = configurationService.getPropertyAsDouble("TEMPERATURE_TRASHOLD");		
 		
-		db = new DataBaseService();		
-		desiredTemperature = new Temperature();
-		desiredTemperature.setValue(defaultDesiredTemperature);		
-		temperatureThershold = new Temperature();
-		temperatureThershold.setValue(defaultTemperatureTrashold);				
+		configurationService = ConfigurationService.getConfigurationService();		
+		db = new DataBaseService();					
 	}
 		
 	public static TemperatureService get() {		
@@ -40,47 +32,55 @@ public class TemperatureService {
 		return temperature;
 	}
 	
-	public HeaterSwitch calculateHeaterStatus() {		
+	public HeaterSwitch getCalculatedHeaterStatus() {
+		
 		HeaterSwitch heaterSwitch = new HeaterSwitch();
 		Date logDate = new Date();		
 		heaterSwitch.setLogDate(logDate);
-		Temperature currentTemperature = db.getLastTemperature();
-		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThershold.getValue()) {
+		
+		Temperature currentTemperature = getLastTemperature();
+		Temperature desiredTemperature = getDesiredTemperature();
+		Temperature temperatureThreshold = getTemperatureThreshold();
+		HeaterSwitch lasetHeaterSwitchStatus = getLastSwitchStatus();
+				
+		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThreshold.getValue()) {
 			heaterSwitch.setStatus(switchStatus.ON);			
-		} else if(heaterSwitch.getStatus() == switchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThershold.getValue()){
+		} else if(lasetHeaterSwitchStatus.getStatus() == switchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThreshold.getValue()){
 			heaterSwitch.setStatus(switchStatus.ON);			
 		} else {
 			heaterSwitch.setStatus(switchStatus.OFF);			
 		}		
 		return heaterSwitch;
-	}
+	}	
 	
 	public HeaterSwitch storeHeaterStatus(HeaterSwitch heaterSwitch) {
 		db.saveSwitchStatus(heaterSwitch);
 		return heaterSwitch;
 	}
 	
-	public Temperature getCurrentTemperature() {		
+	public Temperature getLastTemperature() {		
 		return db.getLastTemperature();
 	}
 	
-	public Temperature getDesiredTemperature() {
-		return desiredTemperature;
-	}	
-		
-	public Temperature setDesiredTemperature(Temperature temperature) {
-		desiredTemperature.setValue(temperature.getValue());
-		desiredTemperature.setLogDate(temperature.getLogDate());
-		return desiredTemperature;
+	public HeaterSwitch getLastSwitchStatus() {
+		HeaterSwitch heaterSwitchStatus = new HeaterSwitch();
+		heaterSwitchStatus = db.getLastSwitchStatus();
+		return heaterSwitchStatus;
 	}
 	
-	public Temperature getTemperatureThershold() {
-		return temperatureThershold;
-	}
-
-	public Temperature setTemperatureThershold(Temperature temperature) {
-		temperatureThershold.setValue(temperature.getValue());
-		temperatureThershold.setLogDate(temperature.getLogDate());
-		return temperatureThershold;
+	public Temperature getDesiredTemperature() {
+		Temperature desiredTemperature = new Temperature();
+		//ToDo get from DB
+		desiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE"));
+		return desiredTemperature;
 	}	
+
+	
+	public Temperature getTemperatureThreshold() {
+		Temperature temperatureThreshold = new Temperature();
+		//ToDO get from DB
+		temperatureThreshold.setValue(configurationService.getPropertyAsDouble("TEMPERATURE_TRASHOLD"));
+		return temperatureThreshold;
+	}
+	
 }
