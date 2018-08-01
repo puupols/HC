@@ -11,24 +11,15 @@ import pojo.switchStatus;
 public class TemperatureService {
 
 	public ConfigurationService configurationService;
-	public DataBaseService db;	
-	public static TemperatureService instance;
+	public DataBaseService dataBaseService;	
 		
-	public TemperatureService() {
-		
-		configurationService = ConfigurationService.getConfigurationService();		
-		db = new DataBaseService();					
+	public TemperatureService(DataBaseService dataBaseService,ConfigurationService configurationService) {		
+		this.configurationService = configurationService;		
+		this.dataBaseService = dataBaseService;					
 	}
-		
-	public static TemperatureService get() {		
-			if(instance == null) {
-				instance = new TemperatureService();
-			}		
-		return instance;
-	}
-	
+			
 	public Temperature storeTemperature(Temperature temperature) {		
-		db.saveTemperature(temperature);
+		dataBaseService.saveTemperature(temperature);
 		return temperature;
 	}
 	
@@ -54,17 +45,17 @@ public class TemperatureService {
 	}	
 	
 	public HeaterSwitch storeHeaterStatus(HeaterSwitch heaterSwitch) {
-		db.saveSwitchStatus(heaterSwitch);
+		dataBaseService.saveSwitchStatus(heaterSwitch);
 		return heaterSwitch;
 	}
 	
 	public Temperature getLastTemperature() {		
-		return db.getLastTemperature();
+		return dataBaseService.getLastTemperature();
 	}
 	
 	public HeaterSwitch getLastSwitchStatus() {
 		HeaterSwitch heaterSwitchStatus = new HeaterSwitch();
-		heaterSwitchStatus = db.getLastSwitchStatus();
+		heaterSwitchStatus = dataBaseService.getLastSwitchStatus();
 		return heaterSwitchStatus;
 	}
 	

@@ -8,6 +8,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin/default"/>
+	<classpathentry output="bin/test" kind="src" path="src/test/java">
+		<attributes>
+			<attribute name="gradle_scope" value="test"/>
+			<attribute name="gradle_used_by_scope" value="test"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/2.0.2.RELEASE/b649098596dd5b6cf378075ccb0bc1e8285a4327/spring-boot-starter-web-2.0.2.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/2.0.2.RELEASE/b6ef0cf4d0a7c6c7e93ff524b84cd1d8f87f67d9/spring-boot-starter-web-2.0.2.RELEASE.jar">
 		<attributes>
@@ -15,6 +21,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.6/380ef5226de2c85ff3b38cbfefeea881c5fce09d/mysql-connector-java-5.1.6.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.0.6.RELEASE/5df6665cba0f134530525b0d885a5ca66b614b02/spring-webmvc-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.0.6.RELEASE/1361c5d1cf46665ee01de5dc1ca447c3be174c19/spring-webmvc-5.0.6.RELEASE.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
@@ -29,26 +40,6 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/2.0.2.RELEASE/4462a0b2f99815fb73ae793d0cd6df298d750c56/spring-boot-starter-tomcat-2.0.2.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/2.0.2.RELEASE/cedbfb18762e1c220007c768bfc5b773f5b30f8a/spring-boot-starter-tomcat-2.0.2.RELEASE.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.0.9.Final/7e11c321d34f623ea1e1f2a843961f2a15f74e99/hibernate-validator-6.0.9.Final-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.0.9.Final/b149e4cce82379f11f6129eb3187ca8ae5404005/hibernate-validator-6.0.9.Final.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.0.6.RELEASE/5df6665cba0f134530525b0d885a5ca66b614b02/spring-webmvc-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.0.6.RELEASE/1361c5d1cf46665ee01de5dc1ca447c3be174c19/spring-webmvc-5.0.6.RELEASE.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.0.6.RELEASE/80d2ad911e4381ea99237aa00332271f132b2eb3/spring-web-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.0.6.RELEASE/89e89de3025165998118590613aedc6df8d64af6/spring-web-5.0.6.RELEASE.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/2.0.2.RELEASE/c8f611fe207cd169f103279cf909f6016e6beeb/spring-boot-autoconfigure-2.0.2.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/2.0.2.RELEASE/f4b25e753e4955337a138d8b1550236b5efe5b3b/spring-boot-autoconfigure-2.0.2.RELEASE.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
@@ -59,17 +50,22 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/2.0.2.RELEASE/812b12100177ac624820ec4a4e997b1a95ac701f/spring-boot-starter-logging-2.0.2.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/2.0.2.RELEASE/b56d7d1931792d6e58dbd41f956912359ba85238/spring-boot-starter-logging-2.0.2.RELEASE.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/65dfd2c47380bf72ec62a5b8c4ceb78a4eda1a53/javax.annotation-api-1.3.2-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/934c04d3cfef185a8008e7bf34331b79730a9d43/javax.annotation-api-1.3.2.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.6.RELEASE/78d14dd2647aeccc925bbf9c780f97243ec3d2bd/spring-context-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.6.RELEASE/8b73b742ef0ddce04f0f1068f305de240b00ce0d/spring-context-5.0.6.RELEASE.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/2.0.2.RELEASE/4462a0b2f99815fb73ae793d0cd6df298d750c56/spring-boot-starter-tomcat-2.0.2.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-tomcat/2.0.2.RELEASE/cedbfb18762e1c220007c768bfc5b773f5b30f8a/spring-boot-starter-tomcat-2.0.2.RELEASE.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.0.9.Final/7e11c321d34f623ea1e1f2a843961f2a15f74e99/hibernate-validator-6.0.9.Final-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.0.9.Final/b149e4cce82379f11f6129eb3187ca8ae5404005/hibernate-validator-6.0.9.Final.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.0.6.RELEASE/80d2ad911e4381ea99237aa00332271f132b2eb3/spring-web-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.0.6.RELEASE/89e89de3025165998118590613aedc6df8d64af6/spring-web-5.0.6.RELEASE.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
@@ -90,6 +86,16 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.6.RELEASE/86ca74938ace10c2aff781b6d93888435baf7474/spring-core-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.6.RELEASE/984a52455b1be596b7f1a29f62d21d2f483eb764/spring-core-5.0.6.RELEASE.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/2.0.2.RELEASE/812b12100177ac624820ec4a4e997b1a95ac701f/spring-boot-starter-logging-2.0.2.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/2.0.2.RELEASE/b56d7d1931792d6e58dbd41f956912359ba85238/spring-boot-starter-logging-2.0.2.RELEASE.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/65dfd2c47380bf72ec62a5b8c4ceb78a4eda1a53/javax.annotation-api-1.3.2-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/934c04d3cfef185a8008e7bf34331b79730a9d43/javax.annotation-api-1.3.2.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
@@ -149,6 +155,11 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.6.RELEASE/ca475012ae43a0745d3cfc0bae4e52de0fddc29f/spring-jcl-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.6.RELEASE/295ee4e8657e9c1fd327735c01d5fbce339cc44d/spring-jcl-5.0.6.RELEASE.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.2.3/cfd5385e0c5ed1c8a5dce57d86e79cf357153a64/logback-classic-1.2.3-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.2.3/7c4f3c474fb2c041d8028740440937705ebb473a/logback-classic-1.2.3.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
@@ -160,11 +171,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.slf4j/jul-to-slf4j/1.7.25/bcea1530927f59b5128841d3571f879ce3af2e86/jul-to-slf4j-1.7.25-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.slf4j/jul-to-slf4j/1.7.25/af5364cd6679bfffb114f0dec8a157aaa283b76/jul-to-slf4j-1.7.25.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.6.RELEASE/ca475012ae43a0745d3cfc0bae4e52de0fddc29f/spring-jcl-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.6.RELEASE/295ee4e8657e9c1fd327735c01d5fbce339cc44d/spring-jcl-5.0.6.RELEASE.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
@@ -209,6 +215,11 @@
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.0.6.RELEASE/14f837d78a638a79f51f1cd9dd8ff80733153530/spring-test-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.0.6.RELEASE/dbc99b288774b2e07d94bc14fe38d556bc3ed34a/spring-test-5.0.6.RELEASE.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="test"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.4.0/c43fc506196089da87a7bb36ec847b57072a818b/json-path-2.4.0-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.4.0/765a4401ceb2dc8d40553c2075eb80a8fa35c2ae/json-path-2.4.0.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
@@ -240,11 +251,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.0/d729b258165a2fd9b5d6156c05c4c4f7ca053117/jsonassert-1.5.0-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.0/6c9d5fe2f59da598d9aefc1cfc6528ff3cf32df3/jsonassert-1.5.0.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.0.6.RELEASE/14f837d78a638a79f51f1cd9dd8ff80733153530/spring-test-5.0.6.RELEASE-sources.jar" kind="lib" path="C:/Users/Saule/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.0.6.RELEASE/dbc99b288774b2e07d94bc14fe38d556bc3ed34a/spring-test-5.0.6.RELEASE.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>

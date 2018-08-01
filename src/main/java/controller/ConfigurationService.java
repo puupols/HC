@@ -5,18 +5,9 @@ import java.util.Properties;
 
 public class ConfigurationService {
 	
-	public static ConfigurationService instance;
-	
-	public static ConfigurationService getConfigurationService() {
-		if(instance == null) {
-			instance = new ConfigurationService();
-		}
-		return instance;
-	}	
-	
 	private Properties properties = new Properties();
 	
-	private ConfigurationService() {
+	public ConfigurationService() {
 		getPropertiesFromFile();
 	}
 		

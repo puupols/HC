@@ -1,19 +1,23 @@
 package rest;
 import controller.TemperatureService;
+import injector.AppConfig;
 import pojo.switchStatus;
 import pojo.HeaterSwitch;
 import pojo.Temperature;
 
 import java.util.Date;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TemperatureController {
+	ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+	TemperatureService temperatureService = context.getBean(TemperatureService.class);	
 	
-	TemperatureService temperatureService = TemperatureService.get();
 		
 	@RequestMapping("/storeTemperature")
 	public Temperature storeTemperature(@RequestParam(value="temperature") double value) {

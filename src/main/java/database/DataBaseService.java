@@ -12,11 +12,21 @@ import pojo.switchStatus;
 
 public class DataBaseService {
 	
-	private ConfigurationService configurationService = ConfigurationService.getConfigurationService();	
-	private String dbUrl = configurationService.getProperty("DB_CONNECTION_URL");
-	private String userName = configurationService.getProperty("DB_USER");
-	private String password  = configurationService.getProperty("DB_PASSWORD");
-	private Connection conn = getConnection(dbUrl, userName, password);
+	private ConfigurationService configurationService;
+	private String dbUrl;
+	private String userName;
+	private String password;
+	private Connection conn;
+	
+	public DataBaseService(ConfigurationService configurationService) {
+		this.configurationService = configurationService;		
+		dbUrl = configurationService.getProperty("DB_CONNECTION_URL");
+		userName = configurationService.getProperty("DB_USER");
+		password  = configurationService.getProperty("DB_PASSWORD");
+		conn = getConnection(dbUrl, userName, password);
+	}	
+		
+	
 	
 	private Connection getConnection(String dbUrl, String userName, String password) {						
 		try {
