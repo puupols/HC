@@ -54,9 +54,7 @@ public class TemperatureService {
 	}
 	
 	public HeaterSwitch getLastSwitchStatus() {
-		HeaterSwitch heaterSwitchStatus = new HeaterSwitch();
-		heaterSwitchStatus = dataBaseService.getLastSwitchStatus();
-		return heaterSwitchStatus;
+		return dataBaseService.getLastSwitchStatus();		
 	}
 	
 	public Temperature getDesiredTemperature() {

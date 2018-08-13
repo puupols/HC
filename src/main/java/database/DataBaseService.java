@@ -13,22 +13,18 @@ import pojo.switchStatus;
 public class DataBaseService {
 	
 	private ConfigurationService configurationService;
-	private String dbUrl;
-	private String userName;
-	private String password;
 	private Connection conn;
-	
 	public DataBaseService(ConfigurationService configurationService) {
 		this.configurationService = configurationService;		
-		dbUrl = configurationService.getProperty("DB_CONNECTION_URL");
-		userName = configurationService.getProperty("DB_USER");
-		password  = configurationService.getProperty("DB_PASSWORD");
-		conn = getConnection(dbUrl, userName, password);
+		conn = getConnection();
 	}	
 		
 	
 	
-	private Connection getConnection(String dbUrl, String userName, String password) {						
+	private Connection getConnection() {	
+		String dbUrl = configurationService.getProperty("DB_CONNECTION_URL");
+		String userName = configurationService.getProperty("DB_USER");
+		String password  = configurationService.getProperty("DB_PASSWORD");
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(dbUrl,userName,password);
