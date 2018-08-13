@@ -26,8 +26,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 	compile group: 'org.springframework', name: 'spring-context'
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile group: 'junit', name: 'junit'
+	compile group: 'org.mockito', name: 'mockito-all', version: '1.+'
 }
