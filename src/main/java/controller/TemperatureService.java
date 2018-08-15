@@ -2,7 +2,7 @@ package controller;
 
 import java.util.Date;
 import database.DataBaseService;
-import pojo.HeaterSwitch;
+import pojo.Switch;
 import pojo.Temperature;
 import pojo.switchStatus;
 
@@ -23,16 +23,16 @@ public class TemperatureService {
 		return temperature;
 	}
 	
-	public HeaterSwitch getCalculatedHeaterStatus() {
+	public Switch getCalculatedHeaterStatus() {
 		
-		HeaterSwitch heaterSwitch = new HeaterSwitch();
+		Switch heaterSwitch = new Switch();
 		Date logDate = new Date();		
 		heaterSwitch.setLogDate(logDate);
 		
 		Temperature currentTemperature = getLastTemperature();
 		Temperature desiredTemperature = getDesiredTemperature();
 		Temperature temperatureThreshold = getTemperatureThreshold();
-		HeaterSwitch lasetHeaterSwitchStatus = getLastSwitchStatus();
+		Switch lasetHeaterSwitchStatus = getLastSwitchStatus();
 				
 		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThreshold.getValue()) {
 			heaterSwitch.setStatus(switchStatus.ON);			
@@ -44,7 +44,7 @@ public class TemperatureService {
 		return heaterSwitch;
 	}	
 	
-	public HeaterSwitch storeHeaterStatus(HeaterSwitch heaterSwitch) {
+	public Switch storeHeaterStatus(Switch heaterSwitch) {
 		dataBaseService.saveSwitchStatus(heaterSwitch);
 		return heaterSwitch;
 	}
@@ -53,7 +53,7 @@ public class TemperatureService {
 		return dataBaseService.getLastTemperature();
 	}
 	
-	public HeaterSwitch getLastSwitchStatus() {
+	public Switch getLastSwitchStatus() {
 		return dataBaseService.getLastSwitchStatus();		
 	}
 	

@@ -2,7 +2,7 @@ package rest;
 import controller.TemperatureService;
 import injector.AppConfig;
 import pojo.switchStatus;
-import pojo.HeaterSwitch;
+import pojo.Switch;
 import pojo.Temperature;
 
 import java.util.Date;
@@ -29,8 +29,8 @@ public class TemperatureController {
 	}
 	
 	@RequestMapping("/storeHeaterStatus")
-	public HeaterSwitch storeHeaterStatus(@RequestParam(value="heaterStatus") String value) {
-		HeaterSwitch heaterSwitch = new HeaterSwitch();
+	public Switch storeHeaterStatus(@RequestParam(value="heaterStatus") String value) {
+		Switch heaterSwitch = new Switch();
 		Date logDate = new Date();
 		try {
 		heaterSwitch.setStatus(switchStatus.valueOf(value));
@@ -53,7 +53,7 @@ public class TemperatureController {
 	}	
 	
 	@RequestMapping("/getCalculatedHeaterStatus")
-	public HeaterSwitch getCalculatedHeaterStatus() {
+	public Switch getCalculatedHeaterStatus() {
 		return temperatureService.getCalculatedHeaterStatus();
 	}
 }

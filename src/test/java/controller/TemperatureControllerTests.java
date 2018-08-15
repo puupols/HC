@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import database.DataBaseService;
-import pojo.HeaterSwitch;
+import pojo.Switch;
 import pojo.Temperature;
 import pojo.switchStatus;
 
@@ -30,7 +30,7 @@ public class TemperatureControllerTests {
 	
 	@Test
 	public void StoreHeaterStatus_ReturnsHeaterSwitch() {
-		HeaterSwitch heaterSwitch = new HeaterSwitch();
+		Switch heaterSwitch = new Switch();
 		Date date = new Date();
 		heaterSwitch.setLogDate(date);
 		heaterSwitch.setStatus(switchStatus.ON);				
@@ -39,9 +39,9 @@ public class TemperatureControllerTests {
 	
 	
 	public void getCalculatedHeaterStatus(Double currentTemp, Double desiredTemp, String lastStatus, Double tempTrashold, String calculatedStatus) {
-		HeaterSwitch heaterSwitch = new HeaterSwitch();
+		Switch heaterSwitch = new Switch();
 		Temperature currentTemperature = new Temperature();	
-		HeaterSwitch lasetHeaterSwitchStatus = new HeaterSwitch();
+		Switch lasetHeaterSwitchStatus = new Switch();
 				
 		currentTemperature.setValue(currentTemp);
 		lasetHeaterSwitchStatus.setStatus(switchStatus.valueOf(lastStatus));		

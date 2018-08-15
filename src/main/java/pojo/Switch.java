@@ -4,7 +4,7 @@ import java.util.Date;
 
 import pojo.switchStatus;
 
-public class HeaterSwitch {
+public class Switch {
 	private switchStatus status;
 	private Date logDate;
 	
