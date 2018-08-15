@@ -13,7 +13,7 @@ float humidity;
 
 const char* ssid = "OPTIC8C8D";
 const char* password = "B1DC8C8D";
-String serverAddress = "http://192.168.1.3:8080/storeTemperature?temperature=";
+String serverAddress = "http://192.168.1.5:8080/storeTemperature?temperature=";
 
 
 void setup() {

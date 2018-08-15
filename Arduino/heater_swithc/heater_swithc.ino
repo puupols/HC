@@ -8,7 +8,9 @@
 
 const char* ssid = "OPTIC8C8D";
 const char* password = "B1DC8C8D";
-String url = "http://192.168.1.3:8080/getHeaterStatus";
+String url = "http://192.168.1.5:8080/getCalculatedHeaterStatus";
+String url_on = "http://192.168.1.5:8080/storeHeaterStatus?heaterStatus=ON";
+String url_off = "http://192.168.1.5:8080/storeHeaterStatus?heaterStatus=OFF";
 int errorCount;
 String switchPossition;
 String  response;
@@ -34,6 +36,7 @@ void loop() {
     // httpCode will be negative on error
     if(httpCode > 0){
       response = http.getString();
+      http.end();
       Serial.println(response);
       DynamicJsonBuffer jsonBuffer;
       JsonObject& root = jsonBuffer.parseObject(response);
@@ -42,13 +45,20 @@ void loop() {
       if(HSstatus == "OFF"){
         digitalWrite(relay, HIGH);
         Serial.println("HIGH");
+        http.begin(url_off);
+        http.GET();
+        http.end();
         errorCount = 0;
         } else {
           digitalWrite(relay, LOW);
           Serial.println("LOW");
+          http.begin(url_on);
+          http.GET();
+          http.end();
           errorCount = 0;
           };      
       } else {
+        http.end();
         errorCount = errorCount + 1;
         Serial.println("Error reading server");
         } 
@@ -57,7 +67,7 @@ void loop() {
           digitalWrite(relay, LOW);
           Serial.println("Switch to emergency mode");
           }         
-    http.end();
+    
   } 
   delay(10000);
 }
