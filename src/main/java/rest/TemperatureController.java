@@ -1,9 +1,10 @@
 package rest;
 import controller.TemperatureService;
 import injector.AppConfig;
-import pojo.switchStatus;
+import pojo.SwitchStatus;
 import pojo.Switch;
 import pojo.Temperature;
+import pojo.TemperatureType;
 
 import java.util.Date;
 
@@ -24,7 +25,8 @@ public class TemperatureController {
 		Temperature temperature = new Temperature();
 		Date logDate = new Date();		
 		temperature.setValue(value);
-		temperature.setLogDate(logDate);		
+		temperature.setLogDate(logDate);
+		temperature.setType(TemperatureType.MEASURED);
 		return temperatureService.storeTemperature(temperature);
 	}
 	
@@ -33,13 +35,23 @@ public class TemperatureController {
 		Switch heaterSwitch = new Switch();
 		Date logDate = new Date();
 		try {
-		heaterSwitch.setStatus(switchStatus.valueOf(value));
+		heaterSwitch.setStatus(SwitchStatus.valueOf(value));
 		} catch (IllegalArgumentException e){
 			System.out.println("Switch status " + value + " not found in enum");
 			return null;
 		}
 		heaterSwitch.setLogDate(logDate);		
 		return temperatureService.storeHeaterStatus(heaterSwitch);
+	}
+	
+	@RequestMapping("/storeDesiredTemperature")
+	public Temperature storeDesiredTemperature(@RequestParam(value="temperature") double value) {
+		Temperature temperature = new Temperature();
+		Date logDate = new Date();
+		temperature.setLogDate(logDate);
+		temperature.setValue(value);
+		temperature.setType(TemperatureType.DESIRED);
+		return temperatureService.storeTemperature(temperature);
 	}
 	
 	@RequestMapping("/getLastTemperature")

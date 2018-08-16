@@ -1,6 +1,6 @@
 package pojo;
 
-public enum switchStatus{
+public enum SwitchStatus{
 	ON,
 	OFF
 }

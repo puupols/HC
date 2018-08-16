@@ -4,7 +4,8 @@ import java.util.Date;
 import database.DataBaseService;
 import pojo.Switch;
 import pojo.Temperature;
-import pojo.switchStatus;
+import pojo.TemperatureType;
+import pojo.SwitchStatus;
 
 
 
@@ -35,11 +36,11 @@ public class TemperatureService {
 		Switch lasetHeaterSwitchStatus = getLastSwitchStatus();
 				
 		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThreshold.getValue()) {
-			heaterSwitch.setStatus(switchStatus.ON);			
-		} else if(lasetHeaterSwitchStatus.getStatus() == switchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThreshold.getValue()){
-			heaterSwitch.setStatus(switchStatus.ON);			
+			heaterSwitch.setStatus(SwitchStatus.ON);			
+		} else if(lasetHeaterSwitchStatus.getStatus() == SwitchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThreshold.getValue()){
+			heaterSwitch.setStatus(SwitchStatus.ON);			
 		} else {
-			heaterSwitch.setStatus(switchStatus.OFF);			
+			heaterSwitch.setStatus(SwitchStatus.OFF);			
 		}		
 		return heaterSwitch;
 	}	
@@ -50,8 +51,10 @@ public class TemperatureService {
 	}
 	
 	public Temperature getLastTemperature() {		
-		return dataBaseService.getLastTemperature();
+		return dataBaseService.getLastTemperature(TemperatureType.MEASURED);
 	}
+	
+
 	
 	public Switch getLastSwitchStatus() {
 		return dataBaseService.getLastSwitchStatus();		
@@ -59,8 +62,10 @@ public class TemperatureService {
 	
 	public Temperature getDesiredTemperature() {
 		Temperature desiredTemperature = new Temperature();
-		//ToDo get from DB
-		desiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE"));
+		desiredTemperature = dataBaseService.getLastTemperature(TemperatureType.DESIRED);
+		if(desiredTemperature.getValue() == 0.0) {
+			desiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE"));			
+		}		
 		return desiredTemperature;
 	}	
 

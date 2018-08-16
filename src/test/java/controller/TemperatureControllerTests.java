@@ -14,7 +14,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import database.DataBaseService;
 import pojo.Switch;
 import pojo.Temperature;
-import pojo.switchStatus;
+import pojo.TemperatureType;
+import pojo.SwitchStatus;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TemperatureControllerTests {
@@ -33,7 +34,7 @@ public class TemperatureControllerTests {
 		Switch heaterSwitch = new Switch();
 		Date date = new Date();
 		heaterSwitch.setLogDate(date);
-		heaterSwitch.setStatus(switchStatus.ON);				
+		heaterSwitch.setStatus(SwitchStatus.ON);				
 		assertEquals(temperatureService.storeHeaterStatus(heaterSwitch), heaterSwitch);		
 	}
 	
@@ -44,15 +45,15 @@ public class TemperatureControllerTests {
 		Switch lasetHeaterSwitchStatus = new Switch();
 				
 		currentTemperature.setValue(currentTemp);
-		lasetHeaterSwitchStatus.setStatus(switchStatus.valueOf(lastStatus));		
+		lasetHeaterSwitchStatus.setStatus(SwitchStatus.valueOf(lastStatus));		
 		
-		Mockito.when(dataBaseService.getLastTemperature()).thenReturn(currentTemperature);
+		Mockito.when(dataBaseService.getLastTemperature(TemperatureType.MEASURED)).thenReturn(currentTemperature);
 		Mockito.when(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE")).thenReturn(desiredTemp);
 		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_TRASHOLD")).thenReturn(tempTrashold);
 		Mockito.when(dataBaseService.getLastSwitchStatus()).thenReturn(lasetHeaterSwitchStatus);
 		
 		heaterSwitch = temperatureService.getCalculatedHeaterStatus();		
-		assertEquals(heaterSwitch.getStatus(), switchStatus.valueOf(calculatedStatus));	
+		assertEquals(heaterSwitch.getStatus(), SwitchStatus.valueOf(calculatedStatus));	
 	}
 	
 	@Test

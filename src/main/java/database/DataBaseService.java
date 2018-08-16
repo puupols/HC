@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import controller.ConfigurationService;
 import pojo.Switch;
 import pojo.Temperature;
-import pojo.switchStatus;
+import pojo.TemperatureType;
+import pojo.SwitchStatus;
 
 public class DataBaseService {
 	
@@ -36,12 +37,13 @@ public class DataBaseService {
 	}
 	
 	public void saveTemperature(Temperature temperature) {		
-		String sql = "INSERT INTO temperature (log_date, value) VALUES (?,?)";
+		String sql = "INSERT INTO temperature (log_date, value, type) VALUES (?,?,?)";
 		java.sql.Timestamp tDate = new java.sql.Timestamp(temperature.getLogDate().getTime());
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setTimestamp(1, tDate);
 			ps.setDouble(2, temperature.getValue());
+			ps.setString(3, temperature.getType().toString());
 			ps.execute();
 			System.out.println("Temperature stored..");
 		} catch (SQLException e) {
@@ -49,15 +51,17 @@ public class DataBaseService {
 		}	
 	}
 	
-	public Temperature getLastTemperature() {		
+	public Temperature getLastTemperature(TemperatureType type) {		
 		Temperature temperature = new Temperature();
-		String sql = "SELECT * FROM temperature order by log_date desc limit 1;";
+		String sql = "SELECT * FROM temperature where type = ? order by log_date desc limit 1;";
 			try {
 				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setString(1, type.toString());
 				ResultSet result = ps.executeQuery();
 				while (result.next()) {					
 					temperature.setValue(result.getDouble("value"));
 					temperature.setLogDate(result.getTimestamp("log_date"));
+					temperature.setType(TemperatureType.valueOf(result.getString("type")));
 				}
 			} catch (SQLException e){
 				e.printStackTrace();
@@ -87,7 +91,7 @@ public class DataBaseService {
 			ResultSet result = ps.executeQuery();
 			while(result.next()) {
 				lastHeaterSwitch.setLogDate(result.getTimestamp("log_date"));
-				lastHeaterSwitch.setStatus(switchStatus.valueOf(result.getString("value")));
+				lastHeaterSwitch.setStatus(SwitchStatus.valueOf(result.getString("value")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
