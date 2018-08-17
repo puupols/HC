@@ -21,13 +21,7 @@ public class TemperatureService {
 	public TemperatureService(DataBaseService dataBaseService,ConfigurationService configurationService) {		
 		this.configurationService = configurationService;		
 		this.dataBaseService = dataBaseService;
-		desiredTemperature = new Temperature();
-		desiredTemperature.setType(TemperatureType.DESIRED);
-		currentTemperature = new Temperature();
-		currentTemperature.setType(TemperatureType.MEASURED);
-		temperatureThreshold = new Temperature();
-		temperatureThreshold.setType(TemperatureType.THRESHOLD);
-		heaterSwitch = new Switch();
+		initVariables();		
 	}
 			
 	public Temperature storeTemperature(Temperature temperature) {
@@ -50,18 +44,19 @@ public class TemperatureService {
 	
 	public Switch getCalculatedHeaterStatus() {
 		
-		Switch lastHeaterSwitch = heaterSwitch;		
-		Date logDate = new Date();		
-		heaterSwitch.setLogDate(logDate);
+		Switch lastHeaterSwitch = heaterSwitch;
+		Switch calculatedHeaterSwitch = new Switch();
+		Date logDate = new Date();
+		calculatedHeaterSwitch.setLogDate(logDate);
 				
 		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThreshold.getValue()) {
-			heaterSwitch.setStatus(SwitchStatus.ON);			
+			calculatedHeaterSwitch.setStatus(SwitchStatus.ON);			
 		} else if(lastHeaterSwitch.getStatus() == SwitchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThreshold.getValue()){
-			heaterSwitch.setStatus(SwitchStatus.ON);			
+			calculatedHeaterSwitch.setStatus(SwitchStatus.ON);			
 		} else {
-			heaterSwitch.setStatus(SwitchStatus.OFF);			
+			calculatedHeaterSwitch.setStatus(SwitchStatus.OFF);			
 		}		
-		return heaterSwitch;
+		return calculatedHeaterSwitch;
 	}	
 	
 	public Switch storeHeaterStatus(Switch heaterSwitch) {
@@ -87,6 +82,24 @@ public class TemperatureService {
 	
 	public Temperature getTemperatureThreshold() {
 		return temperatureThreshold;
+	}
+	
+	public Switch getLastHeaterStatus() {
+		return heaterSwitch;
+	}
+	
+	private void initVariables() {
+		desiredTemperature = new Temperature();
+		desiredTemperature.setType(TemperatureType.DESIRED);
+		desiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE"));
+		currentTemperature = new Temperature();
+		currentTemperature.setType(TemperatureType.MEASURED);
+		currentTemperature.setValue(configurationService.getPropertyAsDouble("DEFAULT_TEMPERATURE"));
+		temperatureThreshold = new Temperature();		
+		temperatureThreshold.setType(TemperatureType.THRESHOLD);
+		temperatureThreshold.setValue(configurationService.getPropertyAsDouble("TEMPERATURE_TRASHOLD"));
+		heaterSwitch = new Switch();
+		heaterSwitch.setStatus(SwitchStatus.OFF);
 	}
 	
 }

@@ -39,12 +39,12 @@ public class TemperatureControllerTests {
 	
 	
 	public void getCalculatedHeaterStatus(Double currentTemp, Double desiredTemp, String lastStatus, Double tempTrashold, String calculatedStatus) {
+		
 		Switch heaterSwitch = new Switch();
 		Temperature currentTemperature = new Temperature();	
 		Temperature desiredTemperature = new Temperature();
 		Temperature temperatureThreshold = new Temperature();
-		Switch lastHeaterSwitchStatus = new Switch();
-		
+		Switch lastHeaterSwitchStatus = new Switch();		
 		
 		currentTemperature.setType(TemperatureType.MEASURED);				
 		currentTemperature.setValue(currentTemp);
@@ -52,20 +52,20 @@ public class TemperatureControllerTests {
 		desiredTemperature.setValue(desiredTemp);
 		temperatureThreshold.setType(TemperatureType.THRESHOLD);
 		temperatureThreshold.setValue(tempTrashold);
-		
-		
 		lastHeaterSwitchStatus.setStatus(SwitchStatus.valueOf(lastStatus));		
+		
 		temperatureService.storeTemperature(currentTemperature);
 		temperatureService.storeHeaterStatus(lastHeaterSwitchStatus);
 		temperatureService.storeTemperature(desiredTemperature);
 		temperatureService.storeTemperature(temperatureThreshold);		
+		
 		heaterSwitch = temperatureService.getCalculatedHeaterStatus();		
 		assertEquals(heaterSwitch.getStatus(), SwitchStatus.valueOf(calculatedStatus));	
 	}
 	
 	@Test
 	public void getCalculatedHeaterStatusTests() {
-		
+				
 		Double currentTemp = 21.4;
 		Double desiredTemp = 21.0;
 		String lastStatus = "ON";

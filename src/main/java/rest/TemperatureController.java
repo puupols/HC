@@ -68,4 +68,9 @@ public class TemperatureController {
 	public Switch getCalculatedHeaterStatus() {
 		return temperatureService.getCalculatedHeaterStatus();
 	}
+	
+	@RequestMapping("/getLastHeaterStatus")
+	public Switch getLastdHeaterStatus() {
+		return temperatureService.getLastHeaterStatus();
+	}
 }
