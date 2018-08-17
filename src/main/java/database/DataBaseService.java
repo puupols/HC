@@ -49,13 +49,14 @@ public class DataBaseService {
 	}
 	
 	
-	public void saveSwitchStatus(Switch heaterSwitch) {
-		String sql = "INSERT INTO switch (log_date, value) VALUES (?, ?)";
-		java.sql.Timestamp tDate = new java.sql.Timestamp(heaterSwitch.getLogDate().getTime());
+	public void saveSwitchStatus(Switch receivedSwitch) {
+		String sql = "INSERT INTO switch (log_date, value, type) VALUES (?, ?, ?)";
+		java.sql.Timestamp tDate = new java.sql.Timestamp(receivedSwitch.getLogDate().getTime());
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setTimestamp(1, tDate);
-			ps.setString(2, heaterSwitch.getStatus().toString());
+			ps.setString(2, receivedSwitch.getStatus().toString());
+			ps.setString(3, receivedSwitch.getType().toString());
 			ps.execute();
 			System.out.println("Switch status saved");
 		} catch (SQLException e){

@@ -1,11 +1,13 @@
 package controller;
 
 import java.util.Date;
+
 import database.DataBaseService;
 import pojo.Switch;
 import pojo.Temperature;
 import pojo.TemperatureType;
 import pojo.SwitchStatus;
+import pojo.SwitchType;
 
 
 
@@ -42,16 +44,16 @@ public class TemperatureService {
 		return temperature;
 	}
 	
-	public Switch getCalculatedHeaterStatus() {
+	public Switch getCalculatedHeaterSwitch() {
 		
-		Switch lastHeaterSwitch = heaterSwitch;
 		Switch calculatedHeaterSwitch = new Switch();
 		Date logDate = new Date();
 		calculatedHeaterSwitch.setLogDate(logDate);
+		calculatedHeaterSwitch.setType(SwitchType.HEATER);
 				
 		if(desiredTemperature.getValue() - currentTemperature.getValue() > temperatureThreshold.getValue()) {
 			calculatedHeaterSwitch.setStatus(SwitchStatus.ON);			
-		} else if(lastHeaterSwitch.getStatus() == SwitchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThreshold.getValue()){
+		} else if(heaterSwitch.getStatus() == SwitchStatus.ON && currentTemperature.getValue() - desiredTemperature.getValue() < temperatureThreshold.getValue()){
 			calculatedHeaterSwitch.setStatus(SwitchStatus.ON);			
 		} else {
 			calculatedHeaterSwitch.setStatus(SwitchStatus.OFF);			
@@ -59,35 +61,44 @@ public class TemperatureService {
 		return calculatedHeaterSwitch;
 	}	
 	
-	public Switch storeHeaterStatus(Switch heaterSwitch) {
-		Switch lastHeaterSwitch = this.heaterSwitch;		
-		this.heaterSwitch = heaterSwitch;
-		if(lastHeaterSwitch.getStatus() != this.heaterSwitch.getStatus()) {
-			dataBaseService.saveSwitchStatus(this.heaterSwitch);
+	public Switch storeSwitch(Switch receivedSwitch) {
+		Switch lastSwitch = new Switch();
+		switch(receivedSwitch.getType()) {
+		case HEATER:
+			lastSwitch = this.heaterSwitch;	
+			this.heaterSwitch = receivedSwitch;
+			break;
+		default:
+			break;
 		}		
-		return heaterSwitch;
+		if(lastSwitch.getStatus() != receivedSwitch.getStatus()) {
+			dataBaseService.saveSwitchStatus(receivedSwitch);
+		}		
+		return receivedSwitch;
 	}
 	
-	public Temperature getLastTemperature() {
-		return currentTemperature;
+	public Temperature getLastTemperature(TemperatureType temperatureType) {
+		switch(temperatureType) {
+		case MEASURED:
+			return currentTemperature;			
+		case DESIRED:
+			return desiredTemperature;			
+		case THRESHOLD:
+			return temperatureThreshold;			
+		default:
+			return null;
+		}		
 	}
 	
-	public Temperature getDesiredTemperature() {
-		return desiredTemperature;
-	}
-	
-	public Switch getLastHeaterSwitch() {
-		return heaterSwitch;
-	}
-	
-	public Temperature getTemperatureThreshold() {
-		return temperatureThreshold;
-	}
-	
-	public Switch getLastHeaterStatus() {
-		return heaterSwitch;
-	}
-	
+	public Switch getLastSwitch(SwitchType switchType) {
+		switch (switchType) {
+		case HEATER:
+			return heaterSwitch;
+		default:
+			return null;			
+		}		
+	}	
+
 	private void initVariables() {
 		desiredTemperature = new Temperature();
 		desiredTemperature.setType(TemperatureType.DESIRED);
@@ -100,6 +111,7 @@ public class TemperatureService {
 		temperatureThreshold.setValue(configurationService.getPropertyAsDouble("TEMPERATURE_TRASHOLD"));
 		heaterSwitch = new Switch();
 		heaterSwitch.setStatus(SwitchStatus.OFF);
+		heaterSwitch.setType(SwitchType.HEATER);
 	}
 	
 }

@@ -34,7 +34,7 @@ public class TemperatureControllerTests {
 		Date date = new Date();
 		heaterSwitch.setLogDate(date);
 		heaterSwitch.setStatus(SwitchStatus.ON);				
-		assertEquals(temperatureService.storeHeaterStatus(heaterSwitch), heaterSwitch);		
+		assertEquals(temperatureService.storeSwitch(heaterSwitch), heaterSwitch);		
 	}
 	
 	
@@ -55,11 +55,11 @@ public class TemperatureControllerTests {
 		lastHeaterSwitchStatus.setStatus(SwitchStatus.valueOf(lastStatus));		
 		
 		temperatureService.storeTemperature(currentTemperature);
-		temperatureService.storeHeaterStatus(lastHeaterSwitchStatus);
+		temperatureService.storeSwitch(lastHeaterSwitchStatus);
 		temperatureService.storeTemperature(desiredTemperature);
 		temperatureService.storeTemperature(temperatureThreshold);		
 		
-		heaterSwitch = temperatureService.getCalculatedHeaterStatus();		
+		heaterSwitch = temperatureService.getCalculatedHeaterSwitch();		
 		assertEquals(heaterSwitch.getStatus(), SwitchStatus.valueOf(calculatedStatus));	
 	}
 	
