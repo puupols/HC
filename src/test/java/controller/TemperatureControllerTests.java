@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import database.DataBaseService;
@@ -42,16 +41,24 @@ public class TemperatureControllerTests {
 	public void getCalculatedHeaterStatus(Double currentTemp, Double desiredTemp, String lastStatus, Double tempTrashold, String calculatedStatus) {
 		Switch heaterSwitch = new Switch();
 		Temperature currentTemperature = new Temperature();	
-		Switch lasetHeaterSwitchStatus = new Switch();
-				
+		Temperature desiredTemperature = new Temperature();
+		Temperature temperatureThreshold = new Temperature();
+		Switch lastHeaterSwitchStatus = new Switch();
+		
+		
+		currentTemperature.setType(TemperatureType.MEASURED);				
 		currentTemperature.setValue(currentTemp);
-		lasetHeaterSwitchStatus.setStatus(SwitchStatus.valueOf(lastStatus));		
+		desiredTemperature.setType(TemperatureType.DESIRED);
+		desiredTemperature.setValue(desiredTemp);
+		temperatureThreshold.setType(TemperatureType.THRESHOLD);
+		temperatureThreshold.setValue(tempTrashold);
 		
-		Mockito.when(dataBaseService.getLastTemperature(TemperatureType.MEASURED)).thenReturn(currentTemperature);
-		Mockito.when(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE")).thenReturn(desiredTemp);
-		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_TRASHOLD")).thenReturn(tempTrashold);
-		Mockito.when(dataBaseService.getLastSwitchStatus()).thenReturn(lasetHeaterSwitchStatus);
 		
+		lastHeaterSwitchStatus.setStatus(SwitchStatus.valueOf(lastStatus));		
+		temperatureService.storeTemperature(currentTemperature);
+		temperatureService.storeHeaterStatus(lastHeaterSwitchStatus);
+		temperatureService.storeTemperature(desiredTemperature);
+		temperatureService.storeTemperature(temperatureThreshold);		
 		heaterSwitch = temperatureService.getCalculatedHeaterStatus();		
 		assertEquals(heaterSwitch.getStatus(), SwitchStatus.valueOf(calculatedStatus));	
 	}
