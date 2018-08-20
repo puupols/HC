@@ -2,14 +2,11 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import controller.ConfigurationService;
 import pojo.Switch;
 import pojo.Temperature;
-import pojo.TemperatureType;
-import pojo.SwitchStatus;
 
 public class DataBaseService {
 	
@@ -51,51 +48,19 @@ public class DataBaseService {
 		}	
 	}
 	
-	public Temperature getLastTemperature(TemperatureType type) {		
-		Temperature temperature = new Temperature();
-		String sql = "SELECT * FROM temperature where type = ? order by log_date desc limit 1;";
-			try {
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ps.setString(1, type.toString());
-				ResultSet result = ps.executeQuery();
-				while (result.next()) {					
-					temperature.setValue(result.getDouble("value"));
-					temperature.setLogDate(result.getTimestamp("log_date"));
-					temperature.setType(TemperatureType.valueOf(result.getString("type")));
-				}
-			} catch (SQLException e){
-				e.printStackTrace();
-			}
-		return temperature;
-	}
 	
-	public void saveSwitchStatus(Switch heaterSwitch) {
-		String sql = "INSERT INTO switch (log_date, value) VALUES (?, ?)";
-		java.sql.Timestamp tDate = new java.sql.Timestamp(heaterSwitch.getLogDate().getTime());
+	public void saveSwitchStatus(Switch receivedSwitch) {
+		String sql = "INSERT INTO switch (log_date, value, type) VALUES (?, ?, ?)";
+		java.sql.Timestamp tDate = new java.sql.Timestamp(receivedSwitch.getLogDate().getTime());
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setTimestamp(1, tDate);
-			ps.setString(2, heaterSwitch.getStatus().toString());
+			ps.setString(2, receivedSwitch.getStatus().toString());
+			ps.setString(3, receivedSwitch.getType().toString());
 			ps.execute();
 			System.out.println("Switch status saved");
 		} catch (SQLException e){
 			e.printStackTrace();
 		}		
-	}
-	
-	public Switch getLastSwitchStatus() {
-		Switch lastHeaterSwitch = new Switch();
-		String sql = "SELECT * FROM switch order by log_date desc limit 1;";
-		try {
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ResultSet result = ps.executeQuery();
-			while(result.next()) {
-				lastHeaterSwitch.setLogDate(result.getTimestamp("log_date"));
-				lastHeaterSwitch.setStatus(SwitchStatus.valueOf(result.getString("value")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return lastHeaterSwitch;
 	}
 }

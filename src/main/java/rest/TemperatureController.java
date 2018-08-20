@@ -2,6 +2,7 @@ package rest;
 import controller.TemperatureService;
 import injector.AppConfig;
 import pojo.SwitchStatus;
+import pojo.SwitchType;
 import pojo.Switch;
 import pojo.Temperature;
 import pojo.TemperatureType;
@@ -21,51 +22,62 @@ public class TemperatureController {
 	
 		
 	@RequestMapping("/storeTemperature")
-	public Temperature storeTemperature(@RequestParam(value="temperature") double value) {
+	public Temperature storeTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="type") String type) {
 		Temperature temperature = new Temperature();
 		Date logDate = new Date();		
 		temperature.setValue(value);
 		temperature.setLogDate(logDate);
-		temperature.setType(TemperatureType.MEASURED);
-		return temperatureService.storeTemperature(temperature);
-	}
-	
-	@RequestMapping("/storeHeaterStatus")
-	public Switch storeHeaterStatus(@RequestParam(value="heaterStatus") String value) {
-		Switch heaterSwitch = new Switch();
-		Date logDate = new Date();
 		try {
-		heaterSwitch.setStatus(SwitchStatus.valueOf(value));
-		} catch (IllegalArgumentException e){
-			System.out.println("Switch status " + value + " not found in enum");
+		temperature.setType(TemperatureType.valueOf(type));
+		} catch (IllegalArgumentException e) {
+			System.out.println("Type" + type + "not found in enum");
 			return null;
 		}
-		heaterSwitch.setLogDate(logDate);		
-		return temperatureService.storeHeaterStatus(heaterSwitch);
+		return temperatureService.storeTemperature(temperature);
 	}
 	
-	@RequestMapping("/storeDesiredTemperature")
-	public Temperature storeDesiredTemperature(@RequestParam(value="temperature") double value) {
-		Temperature temperature = new Temperature();
-		Date logDate = new Date();
-		temperature.setLogDate(logDate);
-		temperature.setValue(value);
-		temperature.setType(TemperatureType.DESIRED);
-		return temperatureService.storeTemperature(temperature);
+	@RequestMapping("/storeSwitch")
+	public Switch storeSwitch(@RequestParam(value="status") String value, @RequestParam(value="type") String type) {
+		Switch receivedSwitch = new Switch();
+		Date logDate = new Date();		
+		receivedSwitch.setLogDate(logDate);
+		try {
+			receivedSwitch.setStatus(SwitchStatus.valueOf(value));
+			receivedSwitch.setType(SwitchType.valueOf(type));
+		} catch (IllegalArgumentException e){
+			System.out.println("Type" + type + "or value " + value + " not found in enum");
+			return null;
+		}				
+		return temperatureService.storeSwitch(receivedSwitch);
 	}
 	
 	@RequestMapping("/getLastTemperature")
-	public Temperature getLastTemperature() {		
-		return temperatureService.getLastTemperature();
+	public Temperature getLastTemperature(@RequestParam(value="type") String type) {
+		TemperatureType temperatureType = null;
+		try {
+		temperatureType = TemperatureType.valueOf(type);
+		} catch (IllegalArgumentException e) {
+			System.out.println("Type " + type + " not found in enum");
+			return null;
+		}
+		return temperatureService.getLastTemperature(temperatureType);
 	}
 	
-	@RequestMapping("/getDesiredTemperature")
-	public Temperature getDesiredTemperature() {
-		return temperatureService.getDesiredTemperature();
-	}	
+	@RequestMapping("/getCalculatedHeaterSwitch")
+	public Switch getCalculatedHeaterSwitch() {
+		return temperatureService.getCalculatedHeaterSwitch();
+	}
 	
-	@RequestMapping("/getCalculatedHeaterStatus")
-	public Switch getCalculatedHeaterStatus() {
-		return temperatureService.getCalculatedHeaterStatus();
+	@RequestMapping("/getLastSwitch")
+	public Switch getLastSwitch(@RequestParam(value = "type") String type) {
+		
+		SwitchType switchType = null;		
+		try {
+			switchType = SwitchType.valueOf(type);			
+		}catch (IllegalArgumentException e) {
+			System.out.println("Type " + type + " not found in enum");
+			return null;
+		}
+		return temperatureService.getLastSwitch(switchType);
 	}
 }

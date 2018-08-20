@@ -7,6 +7,7 @@ import pojo.SwitchStatus;
 public class Switch {
 	private SwitchStatus status;
 	private Date logDate;
+	private SwitchType type;
 	
 	
 	public SwitchStatus getStatus() {
@@ -20,5 +21,11 @@ public class Switch {
 	}
 	public void setLogDate(Date logDate) {
 		this.logDate = logDate;
+	}
+	public SwitchType getType() {
+		return type;
+	}
+	public void setType(SwitchType type) {
+		this.type = type;
 	}
 }
