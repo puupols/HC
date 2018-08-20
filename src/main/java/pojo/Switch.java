@@ -23,7 +23,7 @@ public class Switch {
 		this.logDate = logDate;
 	}
 	public SwitchType getType() {
-		return type;
+		return this.type;
 	}
 	public void setType(SwitchType type) {
 		this.type = type;

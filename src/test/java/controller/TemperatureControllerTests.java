@@ -15,6 +15,7 @@ import pojo.Switch;
 import pojo.Temperature;
 import pojo.TemperatureType;
 import pojo.SwitchStatus;
+import pojo.SwitchType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TemperatureControllerTests {
@@ -26,7 +27,7 @@ public class TemperatureControllerTests {
 	DataBaseService dataBaseService;
 	
 	@InjectMocks
-	TemperatureService temperatureService;
+	HomeControlService temperatureService;
 	
 	@Test
 	public void StoreHeaterStatus_ReturnsHeaterSwitch() {
@@ -38,9 +39,9 @@ public class TemperatureControllerTests {
 	}
 	
 	
-	public void getCalculatedHeaterStatus(Double currentTemp, Double desiredTemp, String lastStatus, Double tempTrashold, String calculatedStatus) {
+	public void getCalculatedHeaterStatus(Double currentTemp, Double desiredTemp, String lastStatus, Double tempTrashold, Boolean shouldBeOn) {
 		
-		Switch heaterSwitch = new Switch();
+		boolean heaterSwitch;
 		Temperature currentTemperature = new Temperature();	
 		Temperature desiredTemperature = new Temperature();
 		Temperature temperatureThreshold = new Temperature();
@@ -59,8 +60,8 @@ public class TemperatureControllerTests {
 		temperatureService.storeTemperature(desiredTemperature);
 		temperatureService.storeTemperature(temperatureThreshold);		
 		
-		heaterSwitch = temperatureService.getCalculatedHeaterSwitch();		
-		assertEquals(heaterSwitch.getStatus(), SwitchStatus.valueOf(calculatedStatus));	
+		heaterSwitch = temperatureService.shouldSwitchBeOn(SwitchType.HEATER);		
+		assertEquals(heaterSwitch, shouldBeOn);	
 	}
 	
 	@Test
@@ -70,35 +71,35 @@ public class TemperatureControllerTests {
 		Double desiredTemp = 21.0;
 		String lastStatus = "ON";
 		Double tempTrashold = 0.5;
-		String calculatedStatus = "ON";
-		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, calculatedStatus);
+		boolean shouldBeOn = true;
+		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, shouldBeOn);
 		
 		currentTemp = 22.1;
 		desiredTemp = 21.0;
 		lastStatus = "ON";
 		tempTrashold = 0.5;
-		calculatedStatus = "OFF";
-		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, calculatedStatus);
+		shouldBeOn = false;
+		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, shouldBeOn);
 		
 		currentTemp = 21.4;
 		desiredTemp = 21.0;
 		lastStatus = "OFF";
 		tempTrashold = 0.5;
-		calculatedStatus = "OFF";
-		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, calculatedStatus);
+		shouldBeOn = false;
+		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, shouldBeOn);
 		
 		currentTemp = 20.5;
 		desiredTemp = 21.0;
 		lastStatus = "OFF";
 		tempTrashold = 0.5;
-		calculatedStatus = "OFF";
-		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, calculatedStatus);
+		shouldBeOn = false;
+		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, shouldBeOn);
 		
 		currentTemp = 20.4;
 		desiredTemp = 21.0;
 		lastStatus = "OFF";
 		tempTrashold = 0.5;
-		calculatedStatus = "ON";
-		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, calculatedStatus);
+		shouldBeOn = true;
+		getCalculatedHeaterStatus(currentTemp, desiredTemp, lastStatus, tempTrashold, shouldBeOn);
 	}	
 }

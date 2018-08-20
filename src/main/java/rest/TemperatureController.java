@@ -1,5 +1,5 @@
 package rest;
-import controller.TemperatureService;
+import controller.HomeControlService;
 import injector.AppConfig;
 import pojo.SwitchStatus;
 import pojo.SwitchType;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TemperatureController {
 	ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-	TemperatureService temperatureService = context.getBean(TemperatureService.class);	
+	HomeControlService temperatureService = context.getBean(HomeControlService.class);	
 	
 		
 	@RequestMapping("/storeTemperature")
@@ -63,9 +63,17 @@ public class TemperatureController {
 		return temperatureService.getLastTemperature(temperatureType);
 	}
 	
-	@RequestMapping("/getCalculatedHeaterSwitch")
-	public Switch getCalculatedHeaterSwitch() {
-		return temperatureService.getCalculatedHeaterSwitch();
+	@RequestMapping("/shouldSwitchBeOn")
+	public boolean shouldSwitchBeOn(@RequestParam(value="type") String type) {
+		SwitchType switchType = null;
+		try {
+			switchType = SwitchType.valueOf(type);
+		} catch (IllegalArgumentException e) {
+			System.out.println("Type " + type + " not found in enum");
+			//ToDo return something else
+			return false;
+		}
+		return temperatureService.shouldSwitchBeOn(switchType);
 	}
 	
 	@RequestMapping("/getLastSwitch")
