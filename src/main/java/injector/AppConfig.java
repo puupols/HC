@@ -8,6 +8,7 @@ import controller.HomeControlService;
 import controller.SwitchService;
 import controller.TemperatureService;
 import database.DataBaseService;
+import managers.HeaterSwitchManager;
 import managers.SwitchManagerFactory;
 
 @Configuration
@@ -36,6 +37,11 @@ public class AppConfig {
 	@Bean
 	public SwitchManagerFactory switchManagerFactory(){
 		return new SwitchManagerFactory();
+	}
+	
+	@Bean
+	public HeaterSwitchManager heaterSwitchManager() {
+		return new HeaterSwitchManager();
 	}
 	
 	@Bean

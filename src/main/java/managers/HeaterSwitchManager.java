@@ -10,11 +10,10 @@ import pojo.SwitchType;
 public class HeaterSwitchManager implements SwitchManager {
 
 	@Autowired
-	TemperatureService temperatureService;
-	
+	private TemperatureService temperatureService;
 	@Autowired
-	SwitchService switchService;
-	
+	private SwitchService switchService;
+		
 	@Override
 	public Boolean shouldSwitchBeOn() {
 				

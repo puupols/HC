@@ -1,14 +1,18 @@
 package managers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import pojo.SwitchType;
 
 public class SwitchManagerFactory {
-	SwitchManager switchManager;
+	
+	@Autowired
+	HeaterSwitchManager heaterSwitchManager;
 	
 	public SwitchManager getSwitchManager(SwitchType switchType){		
 		if(switchType == SwitchType.HEATER){
-			switchManager = new HeaterSwitchManager();
-		}
-		return switchManager;
+			return heaterSwitchManager;
+		}		
+		return null;
 	}
 }

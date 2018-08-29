@@ -29,6 +29,12 @@ public class SwitchService {
 	}
 	
 	public boolean isSwitchOn(SwitchType type) {
-		return switchMap.get(type).getStatus() == SwitchStatus.ON;
+		SwitchStatus currentStatus;		
+		if(switchMap.get(type) == null) {
+			currentStatus = SwitchStatus.ON;
+		} else {
+			currentStatus = switchMap.get(type).getStatus();
+		}
+		return currentStatus == SwitchStatus.ON;
 	}
 }
