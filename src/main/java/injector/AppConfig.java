@@ -8,6 +8,7 @@ import controller.HomeControlService;
 import controller.SwitchService;
 import controller.TemperatureService;
 import database.DataBaseService;
+import managers.SwitchManagerFactory;
 
 @Configuration
 public class AppConfig {
@@ -33,7 +34,12 @@ public class AppConfig {
 	}
 	
 	@Bean
+	public SwitchManagerFactory switchManagerFactory(){
+		return new SwitchManagerFactory();
+	}
+	
+	@Bean
 	public HomeControlService homeControlService() {
-		return new HomeControlService(temperatureService(), switchService());
+		return new HomeControlService(temperatureService(), switchService(), switchManagerFactory());
 	}
 }

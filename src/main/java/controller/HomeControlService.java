@@ -1,5 +1,7 @@
 package controller;
 
+import managers.SwitchManager;
+import managers.SwitchManagerFactory;
 import pojo.Switch;
 import pojo.Temperature;
 import pojo.TemperatureType;
@@ -12,10 +14,13 @@ public class HomeControlService {
 	
 	private TemperatureService temperatureService;
 	private SwitchService switchService;
+	private SwitchManagerFactory switchManagerFactory;
 	
-	public HomeControlService(TemperatureService temperatureService, SwitchService switchService) {		
+	public HomeControlService(TemperatureService temperatureService, SwitchService switchService, 
+			SwitchManagerFactory switchManagerFactory) {		
 		this.temperatureService = temperatureService;
-		this.switchService = switchService;			
+		this.switchService = switchService;
+		this.switchManagerFactory = switchManagerFactory;
 	}
 			
 	public Temperature storeTemperature(Temperature temperature) {		
@@ -23,14 +28,11 @@ public class HomeControlService {
 		return temperature;
 	}
 	
-	public boolean shouldSwitchBeOn(SwitchType switchType) {			
-		if(temperatureService.isBelowThreshold()) {
-			return true;
-		} else if(switchService.isSwitchOn(SwitchType.HEATER) && temperatureService.isInThreshold()){
-			return true;			
-		} else {
-			return false;
-		}
+	public boolean shouldSwitchBeOn(SwitchType switchType) {
+		System.out.print(temperatureService.isBelowThreshold());
+		SwitchManager switchManager = switchManagerFactory.getSwitchManager(switchType);
+		switchManager.shouldSwitchBeOn();	
+		return true;
 	}
 	
 	public Switch storeSwitch(Switch receivedSwitch) {
