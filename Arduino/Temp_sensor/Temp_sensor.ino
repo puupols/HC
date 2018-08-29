@@ -13,7 +13,7 @@ float humidity;
 
 const char* ssid = "OPTIC8C8D";
 const char* password = "B1DC8C8D";
-String serverAddress = "http://192.168.1.5:8080/storeTemperature?temperature=";
+String serverAddress = "http://192.168.1.5:8080/storeTemperature?type=MEASURED&temperature=";
 
 
 void setup() {
@@ -30,17 +30,19 @@ void setup() {
 
 void loop() {
   
-  if(WiFi.status() == WL_CONNECTED){
-    
+  if(WiFi.status() != WL_CONNECTED){
+    WiFi.begin(ssid, password);
+    delay(500);  
+  } else {    
     String url;
     float temperature = dht.readTemperature();
     String tempS = String(temperature);
     
     HTTPClient http;
-    url = serverAddress + tempS;
+    url = serverAddress + tempS;     
     http.begin(url);  
     http.POST("Message from ESP8266");
-    http.end();    
-    }
-  delay(30000);
+    http.end();
+    delay(30000);    
+    }  
   }
