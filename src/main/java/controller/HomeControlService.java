@@ -28,8 +28,7 @@ public class HomeControlService {
 		return temperature;
 	}
 	
-	public boolean shouldSwitchBeOn(SwitchType switchType) {
-		System.out.print(temperatureService.isBelowThreshold());
+	public boolean shouldSwitchBeOn(SwitchType switchType) {		
 		SwitchManager switchManager = switchManagerFactory.getSwitchManager(switchType);			
 		return switchManager.shouldSwitchBeOn(); 
 	}

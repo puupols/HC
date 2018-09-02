@@ -16,14 +16,16 @@ public class HeaterSwitchManager implements SwitchManager {
 		
 	@Override
 	public Boolean shouldSwitchBeOn() {
-				
+		Boolean shouldSwitchBeOn = true;
 		if(temperatureService.isBelowThreshold()) {
-			return true;
+			shouldSwitchBeOn = true;
 		} else if(switchService.isSwitchOn(SwitchType.HEATER) && temperatureService.isInThreshold()){
-			return true;			
+			shouldSwitchBeOn = true;			
 		} else {
-			return false;
-		}	
+			shouldSwitchBeOn = false;
+		}
+		System.out.println("Should heater switch be on: " + shouldSwitchBeOn);
+		return shouldSwitchBeOn;
 	}
 
 }
