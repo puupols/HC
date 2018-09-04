@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,8 +12,7 @@ public class TemperatureService {
 	
 	private DataBaseService dataBaseService;
 	private ConfigurationService configurationService;
-	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();
-	
+	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();		
 	
 	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService) {
 		this.dataBaseService = dataBaseService;
@@ -36,13 +36,24 @@ public class TemperatureService {
 		return temperature;
 	}	
 	
+	public boolean isTemperatresValid() {
+		
+		boolean isTemperatureValid = true;
+		int temperatureValidityPeriodMils = configurationService.getPropertyAsInteger("TEMPERATURE_VALIDITY_PERIOD_MILISEC");
+		Date lastTemperatureDate = getLastTemperature(TemperatureType.MEASURED).getLogDate();
+		Date temperatureValidityTime = new Date(System.currentTimeMillis() - temperatureValidityPeriodMils);	
+		
+		if(lastTemperatureDate == null || lastTemperatureDate.before(temperatureValidityTime)) {			
+			isTemperatureValid = false;
+		} 		
+		return isTemperatureValid;
+	}
+	
 	public boolean isBelowThreshold() {
 		Temperature desiredTemperature = getLastTemperature(TemperatureType.DESIRED);
 		Temperature currentTemperature = getLastTemperature(TemperatureType.MEASURED);
 		Temperature temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD);		
-		return (desiredTemperature.getValue() - currentTemperature.getValue()) > temperatureThreshold.getValue();	
-		
-		
+		return (desiredTemperature.getValue() - currentTemperature.getValue()) > temperatureThreshold.getValue();		
 	}
 	
 	public boolean isInThreshold() {

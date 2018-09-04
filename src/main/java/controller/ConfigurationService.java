@@ -27,4 +27,8 @@ public class ConfigurationService {
 	public Double getPropertyAsDouble(String name) {
 		return Double.parseDouble(properties.getProperty(name));
 	}
+	
+	public Integer getPropertyAsInteger(String name) {
+		return Integer.parseInt(properties.getProperty(name));
+	}
 }
