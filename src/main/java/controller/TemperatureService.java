@@ -12,9 +12,7 @@ public class TemperatureService {
 	
 	private DataBaseService dataBaseService;
 	private ConfigurationService configurationService;
-	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();
-	private final int temperatureValidityPeriodMils = 600000;
-	
+	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();		
 	
 	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService) {
 		this.dataBaseService = dataBaseService;
@@ -39,21 +37,16 @@ public class TemperatureService {
 	}	
 	
 	public boolean isTemperatresValid() {
-		Date currentTemperatureDate = getLastTemperature(TemperatureType.MEASURED).getLogDate();
-		Date tenMinutesBefore = new Date(System.currentTimeMillis() - temperatureValidityPeriodMils);
 		
-		System.out.println(currentTemperatureDate == null);
-		System.out.println(tenMinutesBefore);
+		boolean isTemperatureValid = true;
+		int temperatureValidityPeriodMils = configurationService.getPropertyAsInteger("TEMPERATURE_VALIDITY_PERIOD_MILISEC");
+		Date lastTemperatureDate = getLastTemperature(TemperatureType.MEASURED).getLogDate();
+		Date temperatureValidityTime = new Date(System.currentTimeMillis() - temperatureValidityPeriodMils);	
 		
-		if(currentTemperatureDate == null) {
-			return false;
-		} else if (currentTemperatureDate.before(tenMinutesBefore)) {
-			System.out.println(currentTemperatureDate.before(tenMinutesBefore));
-			return false;
-		} else {
-			return true;
-		}
-		
+		if(lastTemperatureDate == null || lastTemperatureDate.before(temperatureValidityTime)) {			
+			isTemperatureValid = false;
+		} 		
+		return isTemperatureValid;
 	}
 	
 	public boolean isBelowThreshold() {
