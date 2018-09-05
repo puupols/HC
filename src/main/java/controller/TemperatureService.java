@@ -60,7 +60,7 @@ public class TemperatureService {
 		Temperature desiredTemperature = getLastTemperature(TemperatureType.DESIRED);
 		Temperature currentTemperature = getLastTemperature(TemperatureType.MEASURED);
 		Temperature temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD);		
-		return (currentTemperature.getValue() - desiredTemperature.getValue()) < temperatureThreshold.getValue();
-		
+		return ((currentTemperature.getValue() - desiredTemperature.getValue()) < temperatureThreshold.getValue() &&
+				(desiredTemperature.getValue() - currentTemperature.getValue()) < temperatureThreshold.getValue());
 	}
 }
