@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import controller.ConfigurationService;
@@ -40,70 +41,50 @@ public class TemperatureServiceTests {
 		assertEquals(21.3, lastTemperature.getValue(), 0);		
 	}
 	
+	private void storeTemperature(Double value, Date logDate, TemperatureType type) {
+		Temperature temperature = new Temperature();
+		temperature.setValue(value);
+		temperature.setLogDate(logDate);
+		temperature.setType(type);
+		temperatureService.storeTemperature(temperature);
+	}
+	
 	@Test
 	public void isBelowThreshold(){
-		Temperature measuredTemperature = new Temperature();
-		Temperature desiredTemperature = new Temperature();
-		Temperature thresholdTemperature = new Temperature();
 		
-		measuredTemperature.setValue(19.0);
-		measuredTemperature.setLogDate(new Date());
-		measuredTemperature.setType(TemperatureType.MEASURED);
-		
-		desiredTemperature.setValue(21.0);
-		desiredTemperature.setLogDate(new Date());
-		desiredTemperature.setType(TemperatureType.DESIRED);
-		
-		thresholdTemperature.setValue(0.5);
-		thresholdTemperature.setLogDate(new Date());
-		thresholdTemperature.setType(TemperatureType.THRESHOLD);
-		
-		temperatureService.storeTemperature(measuredTemperature);
-		temperatureService.storeTemperature(desiredTemperature);
-		temperatureService.storeTemperature(thresholdTemperature);
-		
-		assertEquals(temperatureService.isBelowThreshold(), true);
-		
-		measuredTemperature.setValue(20.6);
-		temperatureService.storeTemperature(measuredTemperature);
-		
+		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
+		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
+		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);		
+		assertEquals(temperatureService.isBelowThreshold(), true);				
+		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
 		assertEquals(temperatureService.isBelowThreshold(), false);
 	}
 	
 	@Test
 	public void isInThreshold(){
-		Temperature measuredTemperature = new Temperature();
-		Temperature desiredTemperature = new Temperature();
-		Temperature thresholdTemperature = new Temperature();
-		
-		measuredTemperature.setValue(19.0);
-		measuredTemperature.setLogDate(new Date());
-		measuredTemperature.setType(TemperatureType.MEASURED);
-		
-		desiredTemperature.setValue(21.0);
-		desiredTemperature.setLogDate(new Date());
-		desiredTemperature.setType(TemperatureType.DESIRED);
-		
-		thresholdTemperature.setValue(0.5);
-		thresholdTemperature.setLogDate(new Date());
-		thresholdTemperature.setType(TemperatureType.THRESHOLD);
-		
-		temperatureService.storeTemperature(measuredTemperature);
-		temperatureService.storeTemperature(desiredTemperature);
-		temperatureService.storeTemperature(thresholdTemperature);
-		
+		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
+		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
+		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);				
 		assertEquals(temperatureService.isInThreshold(), false);
-		
-		measuredTemperature.setValue(20.6);
-		temperatureService.storeTemperature(measuredTemperature);
+		storeTemperature(20.5, new Date(), TemperatureType.MEASURED);		
+		assertEquals(temperatureService.isInThreshold(), true);	
+		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
+		assertEquals(temperatureService.isInThreshold(), true);		
+		storeTemperature(21.4, new Date(), TemperatureType.MEASURED);		
 		assertEquals(temperatureService.isInThreshold(), true);
-		
-		measuredTemperature.setValue(21.4);
-		temperatureService.storeTemperature(measuredTemperature);
+		storeTemperature(21.5, new Date(), TemperatureType.MEASURED);
 		assertEquals(temperatureService.isInThreshold(), true);
-		
-		measuredTemperature.setValue(21.6);
-		temperatureService.storeTemperature(measuredTemperature);
+		storeTemperature(21.6, new Date(), TemperatureType.MEASURED);
 		assertEquals(temperatureService.isInThreshold(), false);
+	}
+	
+	@Test
+	public void getDefaultValues() {
+		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_DESIRED")).thenReturn(21.0);
+		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_MEASURED")).thenReturn(22.0);
+		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_THRESHOLD")).thenReturn(0.5);
+		assertEquals(temperatureService.getLastTemperature(TemperatureType.MEASURED).getValue(), 22.0, 0);
+		assertEquals(temperatureService.getLastTemperature(TemperatureType.DESIRED).getValue(), 21.0, 0);
+		assertEquals(temperatureService.getLastTemperature(TemperatureType.THRESHOLD).getValue(), 0.5, 0);
 	}
 }
