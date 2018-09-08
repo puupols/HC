@@ -8,6 +8,7 @@ import controller.HomeControlService;
 import controller.SwitchService;
 import controller.TemperatureService;
 import database.DataBaseService;
+import database.DataSource;
 import managers.HeaterSwitchManager;
 import managers.SwitchManagerFactory;
 
@@ -21,7 +22,7 @@ public class AppConfig {
 	
 	@Bean
 	public DataBaseService dataBaseService() {
-		return new DataBaseService(configurationService());
+		return new DataBaseService(dataSource());
 	}
 	
 	@Bean 
@@ -47,5 +48,10 @@ public class AppConfig {
 	@Bean
 	public HomeControlService homeControlService() {
 		return new HomeControlService(temperatureService(), switchService(), switchManagerFactory());
+	}
+	
+	@Bean
+	public DataSource dataSource() {
+		return new DataSource(configurationService());
 	}
 }
