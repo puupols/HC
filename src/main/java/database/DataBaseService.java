@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pojo.Switch;
 import pojo.Temperature;
 
@@ -10,9 +13,10 @@ public class DataBaseService {
 	
 	private DataSource dataSource;
 	private Connection conn;
+	private Logger logger = LoggerFactory.getLogger(DataBaseService.class);
 	
 	public DataBaseService(DataSource dataSource) {
-		this.dataSource = dataSource;
+		this.dataSource = dataSource;		
 	}	
 	
 	public void saveTemperature(Temperature temperature) {		
@@ -24,11 +28,12 @@ public class DataBaseService {
 			ps.setTimestamp(1, tDate);
 			ps.setDouble(2, temperature.getValue());
 			ps.setString(3, temperature.getType().toString());
-			ps.execute();
-			System.out.println("Temperature stored..");
+			ps.execute();			
 			conn.close();
+			logger.info("Temperature stored in DB");
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.error("Error during store temperature in DB: ", e);
 		}	
 	}	
 	
@@ -43,9 +48,10 @@ public class DataBaseService {
 			ps.setString(3, receivedSwitch.getType().toString());
 			ps.execute();
 			conn.close();
-			System.out.println("Switch status saved");
+			logger.info("Switch status stored in DB");
 		} catch (SQLException e){
 			e.printStackTrace();
+			logger.error("Error during store switch status in DB: ", e);
 		}		
 	}
 }

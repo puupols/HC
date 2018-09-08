@@ -9,6 +9,8 @@ import pojo.TemperatureType;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ public class TemperatureController {
 	ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 	HomeControlService temperatureService = context.getBean(HomeControlService.class);	
 	
+	private Logger logger = LoggerFactory.getLogger(TemperatureController.class);
 		
 	@RequestMapping("/storeTemperature")
 	public Temperature storeTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="type") String type) {
@@ -30,7 +33,7 @@ public class TemperatureController {
 		try {
 		temperature.setType(TemperatureType.valueOf(type));
 		} catch (IllegalArgumentException e) {
-			System.out.println("Type" + type + "not found in enum");
+			logger.error("Type " + type + " not found in enum", e);			
 			return null;
 		}
 		return temperatureService.storeTemperature(temperature);
@@ -45,7 +48,7 @@ public class TemperatureController {
 			receivedSwitch.setStatus(SwitchStatus.valueOf(value));
 			receivedSwitch.setType(SwitchType.valueOf(type));
 		} catch (IllegalArgumentException e){
-			System.out.println("Type" + type + "or value " + value + " not found in enum");
+			logger.error("Type" + type + "or value " + value + " not found in enum", e);
 			return null;
 		}				
 		return temperatureService.storeSwitch(receivedSwitch);
@@ -57,7 +60,7 @@ public class TemperatureController {
 		try {
 		temperatureType = TemperatureType.valueOf(type);
 		} catch (IllegalArgumentException e) {
-			System.out.println("Type " + type + " not found in enum");
+			logger.error("Type " + type + " not found in enum", e);
 			return null;
 		}
 		return temperatureService.getLastTemperature(temperatureType);
@@ -69,7 +72,7 @@ public class TemperatureController {
 		try {
 			switchType = SwitchType.valueOf(type);
 		} catch (IllegalArgumentException e) {
-			System.out.println("Type " + type + " not found in enum");
+			logger.error("Type " + type + " not found in enum", e);
 			//ToDo return something else
 			return false;
 		}
@@ -83,7 +86,7 @@ public class TemperatureController {
 		try {
 			switchType = SwitchType.valueOf(type);			
 		}catch (IllegalArgumentException e) {
-			System.out.println("Type " + type + " not found in enum");
+			logger.error("Type " + type + " not found in enum", e);
 			return null;
 		}
 		return temperatureService.getLastSwitch(switchType);
