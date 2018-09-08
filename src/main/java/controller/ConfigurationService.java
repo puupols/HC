@@ -3,9 +3,14 @@ package controller;
 import java.io.FileReader;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class ConfigurationService {
 	
 	private Properties properties = new Properties();
+	private Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
 	
 	public ConfigurationService() {
 		getPropertiesFromFile();
@@ -16,7 +21,7 @@ public class ConfigurationService {
 			FileReader reader = new FileReader("config.properties");
 			properties.load(reader);
 		} catch (Exception e) {
-			System.out.println(e);
+			logger.error("Error reading configuration from file: ", e); 
 		}		
 	}
 	

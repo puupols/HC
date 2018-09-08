@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import database.DataBaseService;
 import pojo.Temperature;
 import pojo.TemperatureType;
@@ -12,6 +15,7 @@ public class TemperatureService {
 	
 	private DataBaseService dataBaseService;
 	private ConfigurationService configurationService;
+	private Logger logger = LoggerFactory.getLogger(TemperatureService.class);
 	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();		
 	
 	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService) {
@@ -21,12 +25,14 @@ public class TemperatureService {
 	
 	public void storeTemperature(Temperature temperature) {
 		temperatureMap.put(temperature.getType(), temperature);
-		dataBaseService.saveTemperature(temperature);
+		logger.info("Temperature stored in runtime map");
+		dataBaseService.saveTemperature(temperature);		
 	}
 	
 	public Temperature getLastTemperature(TemperatureType type) {		
 		Temperature temperature = new Temperature();		
-		if(!temperatureMap.containsKey(type)) {		
+		if(!temperatureMap.containsKey(type)) {
+			logger.info("Temperature of type " + type + " not received yet. Uses default from configuration.");
 			Double temperatureValue = configurationService.getPropertyAsDouble("TEMPERATURE_" + type.toString());			
 			temperature.setType(type);
 			temperature.setValue(temperatureValue);
@@ -43,7 +49,7 @@ public class TemperatureService {
 		Date lastTemperatureDate = getLastTemperature(TemperatureType.MEASURED).getLogDate();
 		Date temperatureValidityTime = new Date(System.currentTimeMillis() - temperatureValidityPeriodMils);	
 		
-		if(lastTemperatureDate == null || lastTemperatureDate.before(temperatureValidityTime)) {			
+		if(lastTemperatureDate != null && lastTemperatureDate.before(temperatureValidityTime)) {			
 			isTemperatureValid = false;
 		} 		
 		return isTemperatureValid;
