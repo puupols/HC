@@ -52,6 +52,6 @@ public class AppConfig {
 	
 	@Bean
 	public DataSource dataSource() {
-		return new DataSource();
+		return new DataSource(configurationService());
 	}
 }
