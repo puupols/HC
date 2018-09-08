@@ -31,4 +31,5 @@ dependencies {
 	compile group: 'org.springframework', name: 'spring-context'
 	compile group: 'junit', name: 'junit'
 	compile group: 'org.mockito', name: 'mockito-all', version: '1.+'
+	compile group: 'com.zaxxer', name: 'HikariCP', version: '2.6.1'
 }
