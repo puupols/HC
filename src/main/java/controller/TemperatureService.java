@@ -56,10 +56,10 @@ public class TemperatureService {
 	}
 	
 	public boolean isBelowThreshold() {
-		Temperature desiredTemperature = getLastTemperature(TemperatureType.DESIRED);
-		Temperature currentTemperature = getLastTemperature(TemperatureType.MEASURED);
-		Temperature temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD);		
-		return (desiredTemperature.getValue() - currentTemperature.getValue()) > temperatureThreshold.getValue();		
+		Double desiredTemperature = getLastTemperature(TemperatureType.DESIRED).getValue();
+		Double currentTemperature = getLastTemperature(TemperatureType.MEASURED).getValue();
+		Double temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD).getValue();		
+		return (desiredTemperature - currentTemperature) > temperatureThreshold;		
 	}
 	
 	public boolean isInThreshold() {

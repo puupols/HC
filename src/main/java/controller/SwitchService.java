@@ -22,7 +22,8 @@ public class SwitchService {
 	}
 	
 	public void storeSwitch(Switch receivedSwitch) {		
-		if(getLastSwitch(receivedSwitch.getType()) == null ? true : getLastSwitch(receivedSwitch.getType()).getStatus() != receivedSwitch.getStatus()) {
+		if(getLastSwitch(receivedSwitch.getType()) == null ||
+				getLastSwitch(receivedSwitch.getType()).getStatus() != receivedSwitch.getStatus()) {
 			dataBaseService.saveSwitchStatus(receivedSwitch);		
 		}
 		switchMap.put(receivedSwitch.getType(), receivedSwitch);
