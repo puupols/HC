@@ -1,5 +1,7 @@
 package controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import database.DataBaseService;
+import pojo.DayPeriod;
+import pojo.DesiredTemperature;
 import pojo.Temperature;
 import pojo.TemperatureType;
 
@@ -16,8 +20,40 @@ public class TemperatureService {
 	private DataBaseService dataBaseService;
 	private ConfigurationService configurationService;
 	private Logger logger = LoggerFactory.getLogger(TemperatureService.class);
-	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();		
+	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();
 	
+	private Map<DayPeriod, DesiredTemperature> desiredTemperatureMap = new HashMap<DayPeriod, DesiredTemperature>();
+	
+	public Temperature getDesiredTemperature(String type){
+		Temperature desiredTemperature = new Temperature();
+		DayPeriod dayPeriod = calculateDayPeriod();
+		
+		if(type == "PROGRAMMED"){
+			return desiredTemperatureMap.get(dayPeriod);
+		} else if (type == "STATIC"){
+			desiredTemperature = getLastTemperature(TemperatureType.DESIRED);
+		}		
+		
+		return desiredTemperature;		
+	}
+	
+	private DayPeriod calculateDayPeriod() {
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		dateFormat.format(date);
+		
+		try {
+			if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse("12:00"))){
+				return DayPeriod.DAY;
+			} else {
+				return DayPeriod.NIGHT;
+			}
+		} catch (ParseException e) {			
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService) {
 		this.dataBaseService = dataBaseService;
 		this.configurationService = configurationService;
@@ -56,14 +92,14 @@ public class TemperatureService {
 	}
 	
 	public boolean isBelowThreshold() {
-		Double desiredTemperature = getLastTemperature(TemperatureType.DESIRED).getValue();
+		Double desiredTemperature = getDesiredTemperature("PROGRAMMED").getValue();
 		Double currentTemperature = getLastTemperature(TemperatureType.MEASURED).getValue();
 		Double temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD).getValue();		
 		return (desiredTemperature - currentTemperature) > temperatureThreshold;		
 	}
 	
 	public boolean isInThreshold() {
-		Double desiredTemperature = getLastTemperature(TemperatureType.DESIRED).getValue();
+		Double desiredTemperature = getDesiredTemperature("PROGRAMMED").getValue();
 		Double currentTemperature = getLastTemperature(TemperatureType.MEASURED).getValue();
 		Double temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD).getValue();		
 		return ((currentTemperature - desiredTemperature) <= temperatureThreshold &&
