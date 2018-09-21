@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import database.DataBaseService;
 import pojo.DayPeriod;
 import pojo.DesiredTemperature;
+import pojo.StatusCalculationType;
 import pojo.Temperature;
 import pojo.TemperatureType;
 
@@ -24,13 +25,13 @@ public class TemperatureService {
 	
 	private Map<DayPeriod, DesiredTemperature> desiredTemperatureMap = new HashMap<DayPeriod, DesiredTemperature>();
 	
-	public Temperature getDesiredTemperature(String type){
+	public Temperature getDesiredTemperature(StatusCalculationType type){
 		Temperature desiredTemperature = new Temperature();
 		DayPeriod dayPeriod = calculateDayPeriod();
 		
-		if(type == "PROGRAMMED"){
+		if(type == StatusCalculationType.PROGRAMMED){
 			return desiredTemperatureMap.get(dayPeriod);
-		} else if (type == "STATIC"){
+		} else if (type == StatusCalculationType.STATIC){
 			desiredTemperature = getLastTemperature(TemperatureType.DESIRED);
 		}		
 		
@@ -91,15 +92,15 @@ public class TemperatureService {
 		return isTemperatureValid;
 	}
 	
-	public boolean isBelowThreshold() {
-		Double desiredTemperature = getDesiredTemperature("PROGRAMMED").getValue();
+	public boolean isBelowThreshold(StatusCalculationType statusCalculationType) {
+		Double desiredTemperature = getDesiredTemperature(statusCalculationType).getValue();
 		Double currentTemperature = getLastTemperature(TemperatureType.MEASURED).getValue();
 		Double temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD).getValue();		
 		return (desiredTemperature - currentTemperature) > temperatureThreshold;		
 	}
 	
-	public boolean isInThreshold() {
-		Double desiredTemperature = getDesiredTemperature("PROGRAMMED").getValue();
+	public boolean isInThreshold(StatusCalculationType statusCalculationType) {
+		Double desiredTemperature = getDesiredTemperature(statusCalculationType).getValue();
 		Double currentTemperature = getLastTemperature(TemperatureType.MEASURED).getValue();
 		Double temperatureThreshold = getLastTemperature(TemperatureType.THRESHOLD).getValue();		
 		return ((currentTemperature - desiredTemperature) <= temperatureThreshold &&
