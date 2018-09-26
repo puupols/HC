@@ -18,7 +18,7 @@ public class SwitchService {
 	private Logger logger = LoggerFactory.getLogger(SwitchService.class);
 	
 	public SwitchService(DataBaseService dataBaseService) {
-		this.dataBaseService = dataBaseService;
+		this.dataBaseService = dataBaseService;		
 	}
 	
 	public void storeSwitch(Switch receivedSwitch) {		
@@ -28,6 +28,12 @@ public class SwitchService {
 		}
 		switchMap.put(receivedSwitch.getType(), receivedSwitch);
 		logger.info("Switch stored in runtime map");
+	}
+	
+	public Switch storeSwitchStatusCalculationType(Switch receivedSwitch){
+		Switch lastSwitch = getLastSwitch(receivedSwitch.getType());
+		lastSwitch.setStatusCalculationType(receivedSwitch.getStatusCalculationType());
+		return lastSwitch;
 	}
 	
 	public Switch getLastSwitch(SwitchType type) {

@@ -2,7 +2,7 @@ package controller;
 
 import managers.SwitchManager;
 import managers.SwitchManagerFactory;
-import pojo.StatusCalculationType;
+import pojo.DesiredTemperature;
 import pojo.Switch;
 import pojo.Temperature;
 import pojo.TemperatureType;
@@ -29,6 +29,11 @@ public class HomeControlService {
 		return temperature;
 	}
 	
+	public DesiredTemperature storeDesiredTemperature(DesiredTemperature desiredTemperature){
+		temperatureService.storeDesiredTemperature(desiredTemperature);
+		return desiredTemperature;
+	}
+	
 	public boolean shouldSwitchBeOn(SwitchType switchType) {		
 		SwitchManager switchManager = switchManagerFactory.getSwitchManager(switchType);			
 		return switchManager.shouldSwitchBeOn(switchService.getLastSwitch(switchType).getStatusCalculationType()); 
@@ -45,6 +50,10 @@ public class HomeControlService {
 	
 	public Switch getLastSwitch(SwitchType switchType) {
 		return switchService.getLastSwitch(switchType);	
-	}		
+	}	
+	
+	public Switch storeSwitchStatusCalculationType(Switch receivedSwitch){
+		return switchService.storeSwitchStatusCalculationType(receivedSwitch);
+	}
 	
 }

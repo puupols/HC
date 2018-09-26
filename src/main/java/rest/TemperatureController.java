@@ -3,6 +3,9 @@ import controller.HomeControlService;
 import injector.AppConfig;
 import pojo.SwitchStatus;
 import pojo.SwitchType;
+import pojo.DayPeriod;
+import pojo.DesiredTemperature;
+import pojo.StatusCalculationType;
 import pojo.Switch;
 import pojo.Temperature;
 import pojo.TemperatureType;
@@ -20,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TemperatureController {
 	ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-	HomeControlService temperatureService = context.getBean(HomeControlService.class);	
+	HomeControlService homeControlService = context.getBean(HomeControlService.class);	
 	
 	private Logger logger = LoggerFactory.getLogger(TemperatureController.class);
 		
@@ -36,7 +39,22 @@ public class TemperatureController {
 			logger.error("Type " + type + " not found in enum", e);			
 			return null;
 		}
-		return temperatureService.storeTemperature(temperature);
+		return homeControlService.storeTemperature(temperature);
+	}
+	
+	@RequestMapping("/storeDesiredTemperature")
+	public DesiredTemperature storeDesiredTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="dayPeriod") String dayPeriod){
+		DesiredTemperature desiredTemperature = new DesiredTemperature();
+		Date logDate = new Date();
+		desiredTemperature.setValue(value);
+		desiredTemperature.setType(TemperatureType.DESIRED);
+		desiredTemperature.setLogDate(logDate);
+		try{
+			desiredTemperature.setDayPeriod(DayPeriod.valueOf(dayPeriod));
+		} catch (IllegalArgumentException e) {
+			logger.error("Day period " + dayPeriod + " not found in enum", e);
+		}
+		return homeControlService.storeDesiredTemperature(desiredTemperature);
 	}
 	
 	@RequestMapping("/storeSwitch")
@@ -51,7 +69,24 @@ public class TemperatureController {
 			logger.error("Type" + type + "or value " + value + " not found in enum", e);
 			return null;
 		}				
-		return temperatureService.storeSwitch(receivedSwitch);
+		return homeControlService.storeSwitch(receivedSwitch);
+	}
+	@RequestMapping("/storeSwitchStatusCalculationType")
+	public Switch storeSwitchCalculationType(@RequestParam(value="type") String type, @RequestParam(value="statusCalculationType") String statusCalculationType){
+		Switch receivedSwitch = new Switch();
+		try{
+			receivedSwitch.setStatusCalculationType(StatusCalculationType.valueOf(statusCalculationType));
+		} catch (IllegalArgumentException e){
+			logger.error("Status calculation type " + statusCalculationType + " not found in enum");
+			return null;
+		}
+		try{
+			receivedSwitch.setType(SwitchType.valueOf(type));
+		} catch (IllegalArgumentException e){
+			logger.error("Type " + statusCalculationType + " not found in enum");
+			return null;
+		}
+		return homeControlService.storeSwitchStatusCalculationType(receivedSwitch);
 	}
 	
 	@RequestMapping("/getLastTemperature")
@@ -63,7 +98,7 @@ public class TemperatureController {
 			logger.error("Type " + type + " not found in enum", e);
 			return null;
 		}
-		return temperatureService.getLastTemperature(temperatureType);
+		return homeControlService.getLastTemperature(temperatureType);
 	}
 	
 	@RequestMapping("/shouldSwitchBeOn")
@@ -76,7 +111,7 @@ public class TemperatureController {
 			//ToDo return something else
 			return false;
 		}
-		return temperatureService.shouldSwitchBeOn(switchType);
+		return homeControlService.shouldSwitchBeOn(switchType);
 	}
 	
 	@RequestMapping("/getLastSwitch")
@@ -89,6 +124,6 @@ public class TemperatureController {
 			logger.error("Type " + type + " not found in enum", e);
 			return null;
 		}
-		return temperatureService.getLastSwitch(switchType);
+		return homeControlService.getLastSwitch(switchType);
 	}
 }

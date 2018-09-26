@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import controller.ConfigurationService;
 import controller.TemperatureService;
 import database.DataBaseService;
+import pojo.StatusCalculationType;
 import pojo.Temperature;
 import pojo.TemperatureType;
 
@@ -55,9 +56,9 @@ public class TemperatureServiceTests {
 		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);		
-		assertEquals(temperatureService.isBelowThreshold(), true);				
+		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), true);				
 		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isBelowThreshold(), false);
+		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), false);
 	}
 	
 	@Test
@@ -65,17 +66,17 @@ public class TemperatureServiceTests {
 		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);				
-		assertEquals(temperatureService.isInThreshold(), false);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);
 		storeTemperature(20.5, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isInThreshold(), true);	
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);	
 		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isInThreshold(), true);		
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);		
 		storeTemperature(21.4, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isInThreshold(), true);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);
 		storeTemperature(21.5, new Date(), TemperatureType.MEASURED);
-		assertEquals(temperatureService.isInThreshold(), true);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);
 		storeTemperature(21.6, new Date(), TemperatureType.MEASURED);
-		assertEquals(temperatureService.isInThreshold(), false);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);
 	}
 	
 	@Test

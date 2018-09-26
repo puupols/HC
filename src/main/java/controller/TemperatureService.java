@@ -66,6 +66,14 @@ public class TemperatureService {
 		dataBaseService.saveTemperature(temperature);		
 	}
 	
+	public void storeDesiredTemperature(DesiredTemperature desiredTemperature){
+		if(desiredTemperature.getDayPeriod() == null){
+		storeTemperature(desiredTemperature);
+		} else {
+		desiredTemperatureMap.put(desiredTemperature.getDayPeriod(), desiredTemperature);
+		}		
+	}
+	
 	public Temperature getLastTemperature(TemperatureType type) {		
 		Temperature temperature = new Temperature();		
 		if(!temperatureMap.containsKey(type)) {
