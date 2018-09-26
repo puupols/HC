@@ -9,11 +9,22 @@ import org.slf4j.LoggerFactory;
 
 public class ConfigurationService {
 	
-	private Properties properties = new Properties();
+	private Properties properties;
 	private Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
-	
+		
 	public ConfigurationService() {
+		
+		properties = new Properties(getDefaultProperties());
 		getPropertiesFromFile();
+	}
+	
+	private Properties getDefaultProperties() {
+		Properties defaultProperties = new Properties();
+		defaultProperties.setProperty("TEMPERATURE_THRESHOLD", "0.5");
+		defaultProperties.setProperty("TEMPERATURE_DESIRED", "21");
+		defaultProperties.setProperty("TEMPERATURE_MEASURED", "21");
+		defaultProperties.setProperty("TEMPERATURE_VALIDITY_PERIOD_MILISEC", "600000");		
+		return defaultProperties;		
 	}
 		
 	private void getPropertiesFromFile() {
