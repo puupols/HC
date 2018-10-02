@@ -32,7 +32,7 @@ public class AppConfig {
 	
 	@Bean
 	public SwitchService switchService() {
-		return new SwitchService(dataBaseService());
+		return new SwitchService(dataBaseService(), configurationService());
 	}
 	
 	@Bean

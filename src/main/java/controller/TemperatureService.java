@@ -24,6 +24,22 @@ public class TemperatureService {
 	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();
 	
 	private Map<DayPeriod, DesiredTemperature> desiredTemperatureMap = new HashMap<DayPeriod, DesiredTemperature>();
+
+	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService) {
+		this.dataBaseService = dataBaseService;
+		this.configurationService = configurationService;
+		createDefaultTemperatures();
+	}
+	
+	private void createDefaultTemperatures(){
+		for(DayPeriod dayPeriod : DayPeriod.values()){
+			DesiredTemperature defaultDesiredTemperature = new DesiredTemperature();
+			defaultDesiredTemperature.setDayPeriod(dayPeriod);
+			defaultDesiredTemperature.setType(TemperatureType.DESIRED);
+			defaultDesiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE_" + dayPeriod));
+			desiredTemperatureMap.put(defaultDesiredTemperature.getDayPeriod(), defaultDesiredTemperature);
+		}		
+	}
 	
 	public Temperature getDesiredTemperature(StatusCalculationType type){
 		Temperature desiredTemperature = new Temperature();
@@ -34,7 +50,6 @@ public class TemperatureService {
 		} else if (type == StatusCalculationType.STATIC){
 			desiredTemperature = getLastTemperature(TemperatureType.DESIRED);
 		}		
-		
 		return desiredTemperature;		
 	}
 	
@@ -42,22 +57,19 @@ public class TemperatureService {
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		dateFormat.format(date);
+		String dayStartTime = configurationService.getProperty("START_TIME_DAY");
+		Boolean isDay = null;
 		
 		try {
-			if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse("12:00"))){
-				return DayPeriod.DAY;
-			} else {
-				return DayPeriod.NIGHT;
-			}
+			isDay = dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse(dayStartTime));
 		} catch (ParseException e) {			
 			e.printStackTrace();
 		}
-		return null;
-	}
-
-	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService) {
-		this.dataBaseService = dataBaseService;
-		this.configurationService = configurationService;
+		if(isDay){
+			return DayPeriod.DAY;
+		} else {
+			return DayPeriod.NIGHT;
+		}
 	}
 	
 	public void storeTemperature(Temperature temperature) {

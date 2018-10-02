@@ -72,7 +72,8 @@ public class TemperatureController {
 		return homeControlService.storeSwitch(receivedSwitch);
 	}
 	@RequestMapping("/storeSwitchStatusCalculationType")
-	public Switch storeSwitchCalculationType(@RequestParam(value="type") String type, @RequestParam(value="statusCalculationType") String statusCalculationType){
+	public Switch storeSwitchCalculationType(@RequestParam(value="type") String type, 
+							@RequestParam(value="statusCalculationType") String statusCalculationType){
 		Switch receivedSwitch = new Switch();
 		try{
 			receivedSwitch.setStatusCalculationType(StatusCalculationType.valueOf(statusCalculationType));
