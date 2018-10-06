@@ -43,9 +43,9 @@ public class TemperatureService {
 	
 	public Temperature getDesiredTemperature(StatusCalculationType type){
 		Temperature desiredTemperature = new Temperature();
-		DayPeriod dayPeriod = calculateDayPeriod();
-		
 		if(type == StatusCalculationType.PROGRAMMED){
+			DayPeriod dayPeriod = calculateDayPeriod();
+			logger.info("Calculated day period " + dayPeriod);
 			return desiredTemperatureMap.get(dayPeriod);
 		} else if (type == StatusCalculationType.STATIC){
 			desiredTemperature = getLastTemperature(TemperatureType.DESIRED);
@@ -54,22 +54,24 @@ public class TemperatureService {
 	}
 	
 	private DayPeriod calculateDayPeriod() {
+		DayPeriod currentDayPeriod = DayPeriod.NIGHT;
+		Boolean isInDayPeriod;
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		dateFormat.format(date);
-		String dayStartTime = configurationService.getProperty("START_TIME_DAY");
-		Boolean isDay = null;
-		
-		try {
-			isDay = dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse(dayStartTime));
-		} catch (ParseException e) {			
-			e.printStackTrace();
+		for(DayPeriod dayPeriod : DayPeriod.values()) {
+			String startTime = configurationService.getProperty("START_TIME_" + dayPeriod);
+			isInDayPeriod = false;
+			try {
+				isInDayPeriod = dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse(startTime));
+			} catch (ParseException e) {
+				logger.error("Error parsing configured start time for day period " + dayPeriod, e);				
+			}
+			if(isInDayPeriod){
+				currentDayPeriod = dayPeriod;
+			}			
 		}
-		if(isDay){
-			return DayPeriod.DAY;
-		} else {
-			return DayPeriod.NIGHT;
-		}
+		return currentDayPeriod;
 	}
 	
 	public void storeTemperature(Temperature temperature) {
@@ -104,8 +106,7 @@ public class TemperatureService {
 		boolean isTemperatureValid = true;
 		int temperatureValidityPeriodMils = configurationService.getPropertyAsInteger("TEMPERATURE_VALIDITY_PERIOD_MILISEC");
 		Date lastTemperatureDate = getLastTemperature(TemperatureType.MEASURED).getLogDate();
-		Date temperatureValidityTime = new Date(System.currentTimeMillis() - temperatureValidityPeriodMils);	
-		
+		Date temperatureValidityTime = new Date(System.currentTimeMillis() - temperatureValidityPeriodMils);		
 		if(lastTemperatureDate != null && lastTemperatureDate.before(temperatureValidityTime)) {			
 			isTemperatureValid = false;
 		} 		

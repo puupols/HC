@@ -24,6 +24,7 @@ public class ConfigurationService {
 		defaultProperties.setProperty("TEMPERATURE_MEASURED", "21");
 		defaultProperties.setProperty("TEMPERATURE_VALIDITY_PERIOD_MILISEC", "600000");
 		defaultProperties.setProperty("START_TIME_DAY", "05:00");
+		defaultProperties.setProperty("START_TIME_NIGHT", "22:00");
 		defaultProperties.setProperty("DESIRED_TEMPERATURE_DAY", "20.5");
 		defaultProperties.setProperty("DESIRED_TEMPERATURE_NIGHT", "19.5");
 		defaultProperties.setProperty("SWITCH_STATUS_CALCULATION_TYPE_HEATER", "PROGRAMMED");

@@ -47,16 +47,18 @@ public class TemperatureController {
 	}
 	
 	@RequestMapping("/storeDesiredTemperature")
-	public DesiredTemperature storeDesiredTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="dayPeriod") String dayPeriod){
+	public DesiredTemperature storeDesiredTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="dayPeriod", required=false) String dayPeriod){
 		DesiredTemperature desiredTemperature = new DesiredTemperature();
 		Date logDate = new Date();
 		desiredTemperature.setValue(value);
 		desiredTemperature.setType(TemperatureType.DESIRED);
 		desiredTemperature.setLogDate(logDate);
-		try{
-			desiredTemperature.setDayPeriod(DayPeriod.valueOf(dayPeriod));
-		} catch (IllegalArgumentException e) {
-			logger.error("Day period " + dayPeriod + " not found in enum", e);
+		if(dayPeriod != null) {
+			try{
+				desiredTemperature.setDayPeriod(DayPeriod.valueOf(dayPeriod));
+			} catch (IllegalArgumentException e) {
+				logger.error("Day period " + dayPeriod + " not found in enum", e);
+			}
 		}
 		return homeControlService.storeDesiredTemperature(desiredTemperature);
 	}
