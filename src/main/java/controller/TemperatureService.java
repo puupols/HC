@@ -15,19 +15,23 @@ import pojo.DesiredTemperature;
 import pojo.StatusCalculationType;
 import pojo.Temperature;
 import pojo.TemperatureType;
+import util.DataTime;
 
 public class TemperatureService {
 	
 	private DataBaseService dataBaseService;
 	private ConfigurationService configurationService;
+	private DataTime dataTime;
 	private Logger logger = LoggerFactory.getLogger(TemperatureService.class);
 	private Map<TemperatureType, Temperature> temperatureMap = new HashMap<TemperatureType, Temperature>();
 	
 	private Map<DayPeriod, DesiredTemperature> desiredTemperatureMap = new HashMap<DayPeriod, DesiredTemperature>();
 
-	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService) {
+	public TemperatureService(DataBaseService dataBaseService, ConfigurationService configurationService,
+			DataTime dataTime) {
 		this.dataBaseService = dataBaseService;
 		this.configurationService = configurationService;
+		this.dataTime = dataTime;
 		createDefaultTemperatures();
 	}
 	
@@ -36,7 +40,7 @@ public class TemperatureService {
 			DesiredTemperature defaultDesiredTemperature = new DesiredTemperature();
 			defaultDesiredTemperature.setDayPeriod(dayPeriod);
 			defaultDesiredTemperature.setType(TemperatureType.DESIRED);
-			defaultDesiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE_" + dayPeriod));
+			defaultDesiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE_DAY"));
 			desiredTemperatureMap.put(defaultDesiredTemperature.getDayPeriod(), defaultDesiredTemperature);
 		}		
 	}
@@ -56,7 +60,7 @@ public class TemperatureService {
 	private DayPeriod calculateDayPeriod() {
 		DayPeriod currentDayPeriod = DayPeriod.NIGHT;
 		Boolean isInDayPeriod;
-		Date date = new Date();
+		Date date = dataTime.getDate();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		dateFormat.format(date);
 		for(DayPeriod dayPeriod : DayPeriod.values()) {

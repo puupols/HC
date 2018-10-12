@@ -2,6 +2,8 @@ package controllers;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Test;
@@ -14,9 +16,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import controller.ConfigurationService;
 import controller.TemperatureService;
 import database.DataBaseService;
+import pojo.DayPeriod;
+import pojo.DesiredTemperature;
 import pojo.StatusCalculationType;
 import pojo.Temperature;
 import pojo.TemperatureType;
+import util.DataTime;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TemperatureServiceTests {
@@ -26,6 +31,9 @@ public class TemperatureServiceTests {
 	
 	@Mock
 	ConfigurationService configurationService;
+	
+	@Mock
+	DataTime dataTime;
 	
 	@InjectMocks
 	TemperatureService temperatureService;
@@ -51,8 +59,42 @@ public class TemperatureServiceTests {
 	}
 	
 	@Test
-	public void isBelowThreshold(){
+	public void storeAndGetProgrammedTemperatures(){
+		Mockito.when(configurationService.getProperty("START_TIME_NIGHT")).thenReturn("21:00");
+		Mockito.when(configurationService.getProperty("START_TIME_DAY")).thenReturn("08:00");	
+		storeDesiredTemperature(DayPeriod.NIGHT, 18.5);
+		storeDesiredTemperature(DayPeriod.DAY, 21.5);
+		getProgrammedTemperature("2018.12.10 05:01:01", 18.5);
+		getProgrammedTemperature("2018.12.10 08:01:01", 21.5);
+		getProgrammedTemperature("2018.12.10 20:59:01", 21.5);
+		getProgrammedTemperature("2018.12.10 21:01:01", 18.5);
+		getProgrammedTemperature("2018.12.10 23:01:01", 18.5);
+	}
+	
+	
+	private void getProgrammedTemperature(String stringDate, Double value){			
+		Date date = new Date();		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		try{
+			date = dateFormat.parse(stringDate);
+		} catch(ParseException e){
+			e.printStackTrace();
+		}			
+		Mockito.when(dataTime.getDate()).thenReturn(date);
+		assertEquals(temperatureService.getDesiredTemperature(StatusCalculationType.PROGRAMMED).getValue(), value, 0);
 		
+	}
+	
+	private void storeDesiredTemperature(DayPeriod dayPeriod, Double temperature){
+		DesiredTemperature desiredTemperature = new DesiredTemperature();
+		desiredTemperature.setDayPeriod(dayPeriod);
+		desiredTemperature.setType(TemperatureType.DESIRED);
+		desiredTemperature.setValue(temperature);
+		temperatureService.storeDesiredTemperature(desiredTemperature);
+	}
+	
+	@Test
+	public void isBelowThreshold(){		
 		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);		
