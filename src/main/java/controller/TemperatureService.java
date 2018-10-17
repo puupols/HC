@@ -110,7 +110,8 @@ public class TemperatureService {
 		boolean isTemperatureValid = true;
 		int temperatureValidityPeriodMils = configurationService.getPropertyAsInteger("TEMPERATURE_VALIDITY_PERIOD_MILISEC");
 		Date lastTemperatureDate = getLastTemperature(TemperatureType.MEASURED).getLogDate();
-		Date temperatureValidityTime = new Date(System.currentTimeMillis() - temperatureValidityPeriodMils);		
+		Date currentTime = dataTime.getDate();
+		Date temperatureValidityTime = new Date(currentTime.getTime() - temperatureValidityPeriodMils);		
 		if(lastTemperatureDate != null && lastTemperatureDate.before(temperatureValidityTime)) {			
 			isTemperatureValid = false;
 		} 		

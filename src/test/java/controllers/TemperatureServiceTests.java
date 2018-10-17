@@ -94,7 +94,7 @@ public class TemperatureServiceTests {
 	}
 	
 	@Test
-	public void isBelowThreshold(){		
+	public void isBelowThresholdTest(){		
 		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);		
@@ -104,7 +104,7 @@ public class TemperatureServiceTests {
 	}
 	
 	@Test
-	public void isInThreshold(){
+	public void isInThresholdTest(){
 		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);				
@@ -122,7 +122,32 @@ public class TemperatureServiceTests {
 	}
 	
 	@Test
-	public void getDefaultValues() {
+	public void isTemperatureValidTest() {
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:16:00", false);
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:25:59", false);
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:26:01", true);
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:35:59", true);
+	}
+	
+	
+	public void checkTemperatureValidity(String currentDateString, String lastTemperatureDateString, Boolean isValid) {
+		Date currentDate = new Date();
+		Date lastTemperatureDate = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		try {
+			currentDate = dateFormat.parse(currentDateString);
+			lastTemperatureDate = dateFormat.parse(lastTemperatureDateString);
+		} catch (ParseException e){
+			e.printStackTrace();
+		}
+		Mockito.when(configurationService.getPropertyAsInteger("TEMPERATURE_VALIDITY_PERIOD_MILISEC")).thenReturn(600000);
+		Mockito.when(dataTime.getDate()).thenReturn(currentDate);
+		storeTemperature(19.0, lastTemperatureDate, TemperatureType.MEASURED);
+		assertEquals(temperatureService.isTemperatresValid(), isValid);		
+	}
+	
+	@Test
+	public void getDefaultValuesTest() {
 		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_DESIRED")).thenReturn(21.0);
 		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_MEASURED")).thenReturn(22.0);
 		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_THRESHOLD")).thenReturn(0.5);
