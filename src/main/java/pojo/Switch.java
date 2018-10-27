@@ -8,6 +8,7 @@ public class Switch {
 	private SwitchStatus status;
 	private Date logDate;
 	private SwitchType type;
+	private StatusCalculationType statusCalculationType;
 	
 	
 	public SwitchStatus getStatus() {
@@ -27,5 +28,11 @@ public class Switch {
 	}
 	public void setType(SwitchType type) {
 		this.type = type;
+	}
+	public StatusCalculationType getStatusCalculationType() {
+		return statusCalculationType;
+	}
+	public void setStatusCalculationType(StatusCalculationType statusCalculationType) {
+		this.statusCalculationType = statusCalculationType;
 	}
 }

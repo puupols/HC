@@ -2,6 +2,8 @@ package controllers;
 
 import static org.junit.Assert.assertEquals;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Test;
@@ -14,8 +16,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import controller.ConfigurationService;
 import controller.TemperatureService;
 import database.DataBaseService;
+import pojo.DayPeriod;
+import pojo.DesiredTemperature;
+import pojo.StatusCalculationType;
 import pojo.Temperature;
 import pojo.TemperatureType;
+import util.DataTime;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TemperatureServiceTests {
@@ -25,6 +31,9 @@ public class TemperatureServiceTests {
 	
 	@Mock
 	ConfigurationService configurationService;
+	
+	@Mock
+	DataTime dataTime;
 	
 	@InjectMocks
 	TemperatureService temperatureService;
@@ -50,36 +59,95 @@ public class TemperatureServiceTests {
 	}
 	
 	@Test
-	public void isBelowThreshold(){
+	public void storeAndGetProgrammedTemperatures(){
+		Mockito.when(configurationService.getProperty("START_TIME_NIGHT")).thenReturn("21:00");
+		Mockito.when(configurationService.getProperty("START_TIME_DAY")).thenReturn("08:00");	
+		storeDesiredTemperature(DayPeriod.NIGHT, 18.5);
+		storeDesiredTemperature(DayPeriod.DAY, 21.5);
+		getProgrammedTemperature("2018.12.10 05:01:01", 18.5);
+		getProgrammedTemperature("2018.12.10 08:01:01", 21.5);
+		getProgrammedTemperature("2018.12.10 20:59:01", 21.5);
+		getProgrammedTemperature("2018.12.10 21:01:01", 18.5);
+		getProgrammedTemperature("2018.12.10 23:01:01", 18.5);
+	}
+	
+	
+	private void getProgrammedTemperature(String stringDate, Double value){			
+		Date date = new Date();		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		try{
+			date = dateFormat.parse(stringDate);
+		} catch(ParseException e){
+			e.printStackTrace();
+		}			
+		Mockito.when(dataTime.getDate()).thenReturn(date);
+		assertEquals(temperatureService.getDesiredTemperature(StatusCalculationType.PROGRAMMED).getValue(), value, 0);
 		
+	}
+	
+	private void storeDesiredTemperature(DayPeriod dayPeriod, Double temperature){
+		DesiredTemperature desiredTemperature = new DesiredTemperature();
+		desiredTemperature.setDayPeriod(dayPeriod);
+		desiredTemperature.setType(TemperatureType.DESIRED);
+		desiredTemperature.setValue(temperature);
+		temperatureService.storeDesiredTemperature(desiredTemperature);
+	}
+	
+	@Test
+	public void isBelowThresholdTest(){		
 		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);		
-		assertEquals(temperatureService.isBelowThreshold(), true);				
+		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), true);				
 		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isBelowThreshold(), false);
+		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), false);
 	}
 	
 	@Test
-	public void isInThreshold(){
+	public void isInThresholdTest(){
 		storeTemperature(19.0, new Date(), TemperatureType.MEASURED);
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);				
-		assertEquals(temperatureService.isInThreshold(), false);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);
 		storeTemperature(20.5, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isInThreshold(), true);	
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);	
 		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isInThreshold(), true);		
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);		
 		storeTemperature(21.4, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isInThreshold(), true);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);
 		storeTemperature(21.5, new Date(), TemperatureType.MEASURED);
-		assertEquals(temperatureService.isInThreshold(), true);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);
 		storeTemperature(21.6, new Date(), TemperatureType.MEASURED);
-		assertEquals(temperatureService.isInThreshold(), false);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);
 	}
 	
 	@Test
-	public void getDefaultValues() {
+	public void isTemperatureValidTest() {
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:16:00", false);
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:25:59", false);
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:26:01", true);
+		checkTemperatureValidity("2018.10.17 19:36:00", "2018.10.17 19:35:59", true);
+	}
+	
+	
+	public void checkTemperatureValidity(String currentDateString, String lastTemperatureDateString, Boolean isValid) {
+		Date currentDate = new Date();
+		Date lastTemperatureDate = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		try {
+			currentDate = dateFormat.parse(currentDateString);
+			lastTemperatureDate = dateFormat.parse(lastTemperatureDateString);
+		} catch (ParseException e){
+			e.printStackTrace();
+		}
+		Mockito.when(configurationService.getPropertyAsInteger("TEMPERATURE_VALIDITY_PERIOD_MILISEC")).thenReturn(600000);
+		Mockito.when(dataTime.getDate()).thenReturn(currentDate);
+		storeTemperature(19.0, lastTemperatureDate, TemperatureType.MEASURED);
+		assertEquals(temperatureService.isTemperatresValid(), isValid);		
+	}
+	
+	@Test
+	public void getDefaultValuesTest() {
 		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_DESIRED")).thenReturn(21.0);
 		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_MEASURED")).thenReturn(22.0);
 		Mockito.when(configurationService.getPropertyAsDouble("TEMPERATURE_THRESHOLD")).thenReturn(0.5);

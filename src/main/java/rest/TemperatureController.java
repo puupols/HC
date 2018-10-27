@@ -3,6 +3,9 @@ import controller.HomeControlService;
 import injector.AppConfig;
 import pojo.SwitchStatus;
 import pojo.SwitchType;
+import pojo.DayPeriod;
+import pojo.DesiredTemperature;
+import pojo.StatusCalculationType;
 import pojo.Switch;
 import pojo.Temperature;
 import pojo.TemperatureType;
@@ -13,6 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TemperatureController {
 	ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-	HomeControlService temperatureService = context.getBean(HomeControlService.class);	
+	HomeControlService homeControlService = context.getBean(HomeControlService.class);	
 	
 	private Logger logger = LoggerFactory.getLogger(TemperatureController.class);
 		
@@ -36,7 +43,24 @@ public class TemperatureController {
 			logger.error("Type " + type + " not found in enum", e);			
 			return null;
 		}
-		return temperatureService.storeTemperature(temperature);
+		return homeControlService.storeTemperature(temperature);
+	}
+	
+	@RequestMapping("/storeDesiredTemperature")
+	public DesiredTemperature storeDesiredTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="dayPeriod", required=false) String dayPeriod){
+		DesiredTemperature desiredTemperature = new DesiredTemperature();
+		Date logDate = new Date();
+		desiredTemperature.setValue(value);
+		desiredTemperature.setType(TemperatureType.DESIRED);
+		desiredTemperature.setLogDate(logDate);
+		if(dayPeriod != null) {
+			try{
+				desiredTemperature.setDayPeriod(DayPeriod.valueOf(dayPeriod));
+			} catch (IllegalArgumentException e) {
+				logger.error("Day period " + dayPeriod + " not found in enum", e);
+			}
+		}
+		return homeControlService.storeDesiredTemperature(desiredTemperature);
 	}
 	
 	@RequestMapping("/storeSwitch")
@@ -51,11 +75,29 @@ public class TemperatureController {
 			logger.error("Type" + type + "or value " + value + " not found in enum", e);
 			return null;
 		}				
-		return temperatureService.storeSwitch(receivedSwitch);
+		return homeControlService.storeSwitch(receivedSwitch);
+	}
+	@RequestMapping("/storeSwitchStatusCalculationType")
+	public Switch storeSwitchCalculationType(@RequestParam(value="type") String type, 
+							@RequestParam(value="statusCalculationType") String statusCalculationType){
+		Switch receivedSwitch = new Switch();
+		try{
+			receivedSwitch.setStatusCalculationType(StatusCalculationType.valueOf(statusCalculationType));
+		} catch (IllegalArgumentException e){
+			logger.error("Status calculation type " + statusCalculationType + " not found in enum");
+			return null;
+		}
+		try{
+			receivedSwitch.setType(SwitchType.valueOf(type));
+		} catch (IllegalArgumentException e){
+			logger.error("Type " + statusCalculationType + " not found in enum");
+			return null;
+		}
+		return homeControlService.storeSwitchStatusCalculationType(receivedSwitch);
 	}
 	
 	@RequestMapping("/getLastTemperature")
-	public Temperature getLastTemperature(@RequestParam(value="type") String type) {
+	public ResponseEntity<Object> getLastTemperature(@RequestParam(value="type") String type) {
 		TemperatureType temperatureType = null;
 		try {
 		temperatureType = TemperatureType.valueOf(type);
@@ -63,7 +105,10 @@ public class TemperatureController {
 			logger.error("Type " + type + " not found in enum", e);
 			return null;
 		}
-		return temperatureService.getLastTemperature(temperatureType);
+		HttpHeaders responseHeadres = new HttpHeaders();
+		responseHeadres.setContentType(MediaType.APPLICATION_JSON);
+		responseHeadres.add("Access-Control-Allow-Origin", "*");				
+		return new ResponseEntity<Object>(homeControlService.getLastTemperature(temperatureType), responseHeadres, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/shouldSwitchBeOn")
@@ -76,11 +121,11 @@ public class TemperatureController {
 			//ToDo return something else
 			return false;
 		}
-		return temperatureService.shouldSwitchBeOn(switchType);
+		return homeControlService.shouldSwitchBeOn(switchType);
 	}
 	
 	@RequestMapping("/getLastSwitch")
-	public Switch getLastSwitch(@RequestParam(value = "type") String type) {
+	public ResponseEntity<Object> getLastSwitch(@RequestParam(value = "type") String type) {
 		
 		SwitchType switchType = null;		
 		try {
@@ -89,6 +134,9 @@ public class TemperatureController {
 			logger.error("Type " + type + " not found in enum", e);
 			return null;
 		}
-		return temperatureService.getLastSwitch(switchType);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+		responseHeaders.add("Access-Control-Allow-Origin", "*");
+		return new ResponseEntity<Object>(homeControlService.getLastSwitch(switchType), responseHeaders, HttpStatus.OK);		
 	}
 }

@@ -11,6 +11,8 @@ import database.DataBaseService;
 import database.DataSource;
 import managers.HeaterSwitchManager;
 import managers.SwitchManagerFactory;
+import util.DataTime;
+import util.DataTimeImpl;
 
 @Configuration
 public class AppConfig {
@@ -27,12 +29,12 @@ public class AppConfig {
 	
 	@Bean 
 	public TemperatureService temperatureService() {
-		return new TemperatureService(dataBaseService(), configurationService());
+		return new TemperatureService(dataBaseService(), configurationService(), dataTime());
 	}
 	
 	@Bean
 	public SwitchService switchService() {
-		return new SwitchService(dataBaseService());
+		return new SwitchService(dataBaseService(), configurationService());
 	}
 	
 	@Bean
@@ -53,5 +55,10 @@ public class AppConfig {
 	@Bean
 	public DataSource dataSource() {
 		return new DataSource(configurationService());
+	}
+	
+	@Bean
+	public DataTime dataTime(){
+		return new DataTimeImpl();
 	}
 }
