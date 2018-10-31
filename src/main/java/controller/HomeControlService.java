@@ -2,6 +2,7 @@ package controller;
 
 import managers.SwitchManager;
 import managers.SwitchManagerFactory;
+import pojo.DayPeriod;
 import pojo.DesiredTemperature;
 import pojo.Switch;
 import pojo.Temperature;
@@ -32,6 +33,10 @@ public class HomeControlService {
 	public DesiredTemperature storeDesiredTemperature(DesiredTemperature desiredTemperature){
 		temperatureService.storeDesiredTemperature(desiredTemperature);
 		return desiredTemperature;
+	}
+	
+	public DesiredTemperature getDesiredTemperature(DayPeriod dayPeriod) {
+		return temperatureService.getDesiredTemperature(dayPeriod);
 	}
 	
 	public boolean shouldSwitchBeOn(SwitchType switchType) {		

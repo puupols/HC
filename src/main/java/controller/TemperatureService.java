@@ -40,7 +40,7 @@ public class TemperatureService {
 			DesiredTemperature defaultDesiredTemperature = new DesiredTemperature();
 			defaultDesiredTemperature.setDayPeriod(dayPeriod);
 			defaultDesiredTemperature.setType(TemperatureType.DESIRED);
-			defaultDesiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE_DAY"));
+			defaultDesiredTemperature.setValue(configurationService.getPropertyAsDouble("DESIRED_TEMPERATURE_" + dayPeriod.toString()));
 			desiredTemperatureMap.put(defaultDesiredTemperature.getDayPeriod(), defaultDesiredTemperature);
 		}		
 	}
@@ -90,6 +90,10 @@ public class TemperatureService {
 		} else {
 		desiredTemperatureMap.put(desiredTemperature.getDayPeriod(), desiredTemperature);
 		}		
+	}
+	
+	public DesiredTemperature getDesiredTemperature(DayPeriod dayPeriod) {
+		return desiredTemperatureMap.get(dayPeriod);
 	}
 	
 	public Temperature getLastTemperature(TemperatureType type) {		
