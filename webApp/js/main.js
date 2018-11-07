@@ -1,40 +1,43 @@
 function loadCurrentData(){
 
-    buildCurrentDataTable();    
+    buildCurrentDataTable();
     buildDataManageTable();
 }
 
 function buildCurrentDataTable(){
-    var table = document.getElementById("currentData");
-    insertCurrentDataRow(table, "Current temperature", "currentTemperature");
-    getData("http://192.168.1.4:8080/getLastTemperature?type=MEASURED", "currentTemperature", "value"); 
-    insertCurrentDataRow(table, "Last temperature datatime", "currentTemperatureDatatime");
-    getData("http://192.168.1.4:8080/getLastTemperature?type=MEASURED", "currentTemperatureDatatime", "logDate");    
-    insertCurrentDataRow(table, "Desired temperature Day", "desiredTemperatureDay");
-    getData("http://192.168.1.4:8080/getDesiredTemperature?dayPeriod=DAY","desiredTemperatureDay", "value");    
-    insertCurrentDataRow(table, "Desired temperature Night", "desiredTemperatureNight");
-    getData("http://192.168.1.4:8080/getDesiredTemperature?dayPeriod=NIGHT","desiredTemperatureNight", "value");
-    insertCurrentDataRow(table, "Heater switch status", "heaterSwitchStatus");
-    getData("http://192.168.1.4:8080/getLastSwitch?type=HEATER","heaterSwitchStatus", "status");
+  var table = document.getElementById("currentData");
+  var host = configuration.general.host;
+    for (var key in configuration.currentDataConfig){
+      if(configuration.currentDataConfig.hasOwnProperty(key)){
+        var currentDataConfig = configuration.currentDataConfig[key];
+        insertCurrentDataRow(table, currentDataConfig.label, currentDataConfig.id);
+        getData(host + currentDataConfig.dataSource, currentDataConfig.id, currentDataConfig.dataSourceVariable);
+      }
+    }
 }
 
-function insertCurrentDataRow(table, name, valueId){    
+function buildDataManageTable(){
+    var table = document.getElementById("manageData");
+    var host = configuration.general.host;
+    for(var key in configuration.dataManageConfig){
+      if(configuration.dataManageConfig.hasOwnProperty(key)){
+        var dataManageConfig = configuration.dataManageConfig[key];
+        insertDataManageRow(table, dataManageConfig.label, dataManageConfig.id, host + dataManageConfig.dataConsumer)
+      }
+    }
+}
+
+function insertCurrentDataRow(table, name, valueId){
     table.insertRow();
     var lastRow = table.rows.length -1;
     table.rows[lastRow].insertCell().innerHTML = name;
     table.rows[lastRow].insertCell().setAttribute("id", valueId);
 }
 
-function buildDataManageTable(){
-    var table = document.getElementById("manageData");
-    insertDataManageRow(table, "Desired temperature Day", "setDesiredTemperatureDay", "http://localhost:8080/storeDesiredTemperature?dayPeriod=DAY&temperature=");
-    insertDataManageRow(table, "Desired temperature Night", "setDesiredTemperatureNight", "http://localhost:8080/storeDesiredTemperature?dayPeriod=NIGHT&temperature=");
-}
 
-
-function insertDataManageRow(table, name, valueId, buttonCall){    
+function insertDataManageRow(table, name, valueId, buttonCall){
     var inputNumber = createInputNumber(valueId);
-    var button = createButton(buttonCall, valueId);        
+    var button = createButton(buttonCall, valueId);
     table.insertRow();
     var lastRow = table.rows.length -1;
     table.rows[lastRow].insertCell().innerHTML = name;
