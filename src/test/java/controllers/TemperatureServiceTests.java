@@ -99,6 +99,10 @@ public class TemperatureServiceTests {
 		storeTemperature(21.0, new Date(), TemperatureType.DESIRED);
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);		
 		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), true);				
+		storeTemperature(20.4, new Date(), TemperatureType.MEASURED);		
+		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), true);
+		storeTemperature(20.5, new Date(), TemperatureType.MEASURED);		
+		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), true);	
 		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
 		assertEquals(temperatureService.isBelowThreshold(StatusCalculationType.STATIC), false);
 	}
@@ -110,15 +114,13 @@ public class TemperatureServiceTests {
 		storeTemperature(0.5, new Date(), TemperatureType.THRESHOLD);				
 		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);
 		storeTemperature(20.5, new Date(), TemperatureType.MEASURED);		
-		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);	
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);	
 		storeTemperature(20.6, new Date(), TemperatureType.MEASURED);		
 		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);		
 		storeTemperature(21.4, new Date(), TemperatureType.MEASURED);		
 		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);
 		storeTemperature(21.5, new Date(), TemperatureType.MEASURED);
-		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), true);
-		storeTemperature(21.6, new Date(), TemperatureType.MEASURED);
-		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);
+		assertEquals(temperatureService.isInThreshold(StatusCalculationType.STATIC), false);		
 	}
 	
 	@Test
