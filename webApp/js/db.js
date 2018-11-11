@@ -1,6 +1,6 @@
 function getData(request, elementId, value){
     var xhttp = new XMLHttpRequest();
-    var result;    
+    var result;
     xhttp.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
             result = JSON.parse(this.responseText);
@@ -12,8 +12,13 @@ function getData(request, elementId, value){
 }
 
 function saveData(request, elementId){
-    var xhttp = new XMLHttpRequest();    
+    var xhttp = new XMLHttpRequest();
     var finalRequest = request + document.getElementById(elementId).value;
+    xhttp.onreadystatechange = function(){
+      if(this.readyState == 4 && this.status == 200){
+        location.reload();
+      }
+    }
     xhttp.open("GET", finalRequest, true);
     xhttp.send();
 }

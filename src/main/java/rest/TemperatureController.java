@@ -47,7 +47,7 @@ public class TemperatureController {
 	}
 	
 	@RequestMapping("/storeDesiredTemperature")
-	public DesiredTemperature storeDesiredTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="dayPeriod", required=false) String dayPeriod){
+	public ResponseEntity<Object> storeDesiredTemperature(@RequestParam(value="temperature") double value, @RequestParam(value="dayPeriod", required=false) String dayPeriod){
 		DesiredTemperature desiredTemperature = new DesiredTemperature();
 		Date logDate = new Date();
 		desiredTemperature.setValue(value);
@@ -60,7 +60,10 @@ public class TemperatureController {
 				logger.error("Day period " + dayPeriod + " not found in enum", e);
 			}
 		}
-		return homeControlService.storeDesiredTemperature(desiredTemperature);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+		responseHeaders.add("Access-Control-Allow-Origin", "*");
+		return new ResponseEntity<Object>(homeControlService.storeDesiredTemperature(desiredTemperature), responseHeaders, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/getDesiredTemperature")
