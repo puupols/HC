@@ -3,4 +3,8 @@
 /bin/
 .classpath
 /.settings/
+/out/
+/.idea/
+/src/main/main.iml
+/src/test/test.iml
 config.properties
