@@ -2,14 +2,11 @@ package controller;
 
 import managers.SwitchManager;
 import managers.SwitchManagerFactory;
-import pojo.DayPeriod;
-import pojo.DesiredTemperature;
-import pojo.Switch;
-import pojo.Temperature;
-import pojo.TemperatureType;
+import pojo.*;
 
-import pojo.SwitchType;
-
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class HomeControlService {
@@ -17,12 +14,14 @@ public class HomeControlService {
 	private TemperatureService temperatureService;
 	private SwitchService switchService;
 	private SwitchManagerFactory switchManagerFactory;
+	private ReportingService reportingService;
 	
 	public HomeControlService(TemperatureService temperatureService, SwitchService switchService, 
-			SwitchManagerFactory switchManagerFactory) {		
+			SwitchManagerFactory switchManagerFactory, ReportingService reportingService) {
 		this.temperatureService = temperatureService;
 		this.switchService = switchService;
 		this.switchManagerFactory = switchManagerFactory;
+		this.reportingService = reportingService;
 	}
 			
 	public Temperature storeTemperature(Temperature temperature) {		
@@ -59,6 +58,10 @@ public class HomeControlService {
 	
 	public Switch storeSwitchStatusCalculationType(Switch receivedSwitch){
 		return switchService.storeSwitchStatusCalculationType(receivedSwitch);
+	}
+
+	public List<SwitchOnTime> getSwitchOnTime(){
+		return reportingService.getSwitchOnTime();
 	}
 	
 }
