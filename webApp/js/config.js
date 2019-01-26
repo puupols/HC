@@ -45,5 +45,16 @@ var configuration = {
       'label' : 'Desired temperature Night',
       'dataConsumer' : 'storeDesiredTemperature?dayPeriod=NIGHT&temperature='
     }
+  },
+  'reportDataConfig': {
+    'dataSource' : 'getSwitchOnTime',
+    'date' : {
+      'label' : 'Date',
+      'dataSource' : 'date'
+    },
+    'onTime' : {
+      'label' : 'On time',
+      'dataSource' : 'onTime'
+    }    
   }
 }

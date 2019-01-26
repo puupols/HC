@@ -1,10 +1,10 @@
-function getData(request, elementId, resultElement){
+function getOneAttributeData(request, elementId, resultElement){
     var xhttp = new XMLHttpRequest();
     var result;
     var value;
     xhttp.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
-            result = JSON.parse(this.responseText);            
+            result = JSON.parse(this.responseText);
             if(resultElement == "logDate"){
               value = new Date(result[resultElement]).toLocaleString();
             } else {
@@ -15,6 +15,20 @@ function getData(request, elementId, resultElement){
     };
     xhttp.open("GET", request, true);
     xhttp.send();
+}
+
+function getReportData(request, callBack) {
+  var xhttp = new XMLHttpRequest();
+  var result;
+  var value;
+  xhttp.onreadystatechange = function(){
+      if(this.readyState == 4 && this.status == 200){
+          result = JSON.parse(this.responseText);
+          callBack(result);
+      }
+  };
+  xhttp.open("GET", request, true);
+  xhttp.send();
 }
 
 function saveData(request, elementId){
