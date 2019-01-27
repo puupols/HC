@@ -33,7 +33,6 @@ public class DataBaseService {
 			ps.setDouble(2, temperature.getValue());
 			ps.setString(3, temperature.getType().toString());
 			ps.execute();
-			conn.close();
 			logger.info("Temperature stored in DB");
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -1,6 +1,6 @@
 var configuration = {
   'general': {
-    'host': 'http://192.168.1.4:8080/'
+    'host': '/rest/'
   },
   'currentDataConfig': {
     'currentTemperature' : {
@@ -55,6 +55,6 @@ var configuration = {
     'onTime' : {
       'label' : 'On time',
       'dataSource' : 'onTime'
-    }    
+    }
   }
 }

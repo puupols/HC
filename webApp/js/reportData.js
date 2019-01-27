@@ -2,7 +2,7 @@ function buildRerpotDataTable(){
   var table = document.getElementById("reportData");
   var host = configuration.general.host;
   createReportDataTableHeader(table);
-  var fillReportDataTable = function fillReportDataTable(result){
+  function fillReportDataTable(result){
     for(var key in result){
       table.insertRow();
       var lastRow = table.rows.length -1;
