@@ -1,12 +1,9 @@
 package injector;
 
+import controller.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import controller.ConfigurationService;
-import controller.HomeControlService;
-import controller.SwitchService;
-import controller.TemperatureService;
 import database.DataBaseService;
 import database.DataSource;
 import managers.HeaterSwitchManager;
@@ -49,7 +46,12 @@ public class AppConfig {
 	
 	@Bean
 	public HomeControlService homeControlService() {
-		return new HomeControlService(temperatureService(), switchService(), switchManagerFactory());
+		return new HomeControlService(temperatureService(), switchService(), switchManagerFactory(), reportingService());
+	}
+
+	@Bean
+	public ReportingService reportingService(){
+		return new ReportingService(dataBaseService());
 	}
 	
 	@Bean

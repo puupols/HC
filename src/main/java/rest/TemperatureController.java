@@ -156,4 +156,12 @@ public class TemperatureController {
 		responseHeaders.add("Access-Control-Allow-Origin", "*");
 		return new ResponseEntity<Object>(homeControlService.getLastSwitch(switchType), responseHeaders, HttpStatus.OK);		
 	}
+
+	@RequestMapping("/getSwitchOnTime")
+	public ResponseEntity<Object> getSwitchOnTime(){
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+		responseHeaders.add("Access-Control-Allow-Origin", "*");
+		return new ResponseEntity<Object>(homeControlService.getSwitchOnTime(), responseHeaders,HttpStatus.OK);
+	}
 }

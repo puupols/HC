@@ -1,6 +1,6 @@
 var configuration = {
   'general': {
-    'host': 'http://192.168.1.4:8080/'
+    'host': '/rest/'
   },
   'currentDataConfig': {
     'currentTemperature' : {
@@ -44,6 +44,17 @@ var configuration = {
       'id' : 'setDesiredTemperatureNight',
       'label' : 'Desired temperature Night',
       'dataConsumer' : 'storeDesiredTemperature?dayPeriod=NIGHT&temperature='
+    }
+  },
+  'reportDataConfig': {
+    'dataSource' : 'getSwitchOnTime',
+    'date' : {
+      'label' : 'Date',
+      'dataSource' : 'date'
+    },
+    'onTime' : {
+      'label' : 'On time',
+      'dataSource' : 'onTime'
     }
   }
 }
