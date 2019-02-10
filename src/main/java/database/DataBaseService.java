@@ -81,7 +81,7 @@ public class DataBaseService {
 		ResultSet rs;
 		String sql = "select DATE_FORMAT(a.log_date, \"%Y.%m.%d\") log_date, sec_to_time(sum(time_to_sec(TIMEDIFF(b.log_date, a.log_date)))) diff from \n" +
 				"switch a join switch b on a.id + 1 = b.id\n" +
-				"where a.value = 'ON' and a.log_date > NOW() - INTERVAL 4 DAY\n" +
+				"where a.value = 'ON' and a.log_date > DATE(NOW()) - INTERVAL 4 DAY\n" +
 				"group by log_date\n" +
 				"order by log_date desc;";
 		try{
